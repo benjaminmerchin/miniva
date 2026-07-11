@@ -1,0 +1,669 @@
+Hermes Buildathon
+
+
+Builder Handbook
+Your city
+
+All cities
+Welcome
+
+Cover
+00
+
+Welcome
+01
+
+Prizes
+02
+Score
+
+Rules
+03
+
+Scoring
+04
+Build
+
+Setup
+05
+
+Your track
+06
+
+Idea Library
+07
+Ship
+
+Ship & submit
+08
+
+Demo prep
+09
+
+After
+10
+
+FAQ
+11
+
+Terms
+12
+GrowthX
+05 / 13
+04 / Scoring
+Scoring.
+Your track's rubric and partner power-ups on top. One formula everywhere. Everything you can score is on this page.
+
+Eligibility
+The rules.
+Every team must use Hermes in at least one of two ways. No Hermes, no score. This is the only eligibility rule.
+
+01 · As your coding partner
+Hermes built your product. Sessions, real prompts, receipts. Keep your session receipts so mentors have something to glance at.
+
+Example: Team Chai opens their Hermes session history: 41 prompts, a schema argument at 11:14, a refactor at 2 pm, commits authored mid-session. The mentor scrolls for thirty seconds, watches the product take shape prompt by prompt, and nods. Qualified.
+
+02 · As the base harness
+Your product runs on Hermes and your end users interact with it. Show at least one Hermes capability doing real work in your build.
+
+Example: TutorBot runs on Hermes. A judge texts it on Telegram from her own phone, it recalls her weak topics from yesterday's memory, and the 6 pm cron fires a revision quiz while everyone watches. Three capabilities, each doing real work for a real user.
+
+Either one qualifies. Doing both is allowed.
+
+Rubric 101
+L1 to L5.
+Every parameter is scored L1 to L5. A lens, not a spreadsheet you fill at the end. Apply the rubric to your own build as you go.
+
+L1
+Floor
+Didn't attempt. 0 points.
+
+L2
+Baseline
+Attempted. Missing the core.
+
+L3
+Working
+Does what it claims.
+
+L4
+Strong
+Real quality. Stands out in the zone.
+
+L5
+Exceptional
+Reachable if you ship well. Overflow stacks on top.
+
+The formula
+points = (L − 1) × weight, the same everywhere. L5 on a 20x-weight parameter is 80 points. L3 on the same parameter is 40. L1 is always 0: participation does not score.
+
+How we verify
+Numbers are verified, not trusted. Signups get checked in your database live, not on a screenshot. Traffic data gets cross-checked against signup data, and the two have to make sense together. Mentors are on the floor all day. And when something smells off, we go deeper: we call your customers, we email your signups and watch what bounces, and we run checks we do not publish. A spoofed number zeroes the parameter.
+
+Core track base
+164 to 208
+Your track's rubric below, scored L1 to L5 across its parameters.
+Overflow
+Uncapped
+Past the L5 ceiling on flagged parameters, every additional increment keeps paying.
+Power-ups
++25 each
+Flat 25 per partner, no cap, listed after each track. All six = 150.
+Cross-track bonus
+50 cap
+Wins in someone else's track at half weight.
+Track 01 · 164 base + overflow
+Virality.
+Narrative matters, platform does not: X, LinkedIn, YouTube, Instagram all count the same on impressions. Ad-driven numbers are discounted to 25% of face value. Four of the five parameters overflow: past the L5 ceiling, every additional increment adds points on top, uncapped.
+
+Scroll sideways to read all five levels.
+
+Parameter	L1	L2	L3	L4	L5
+Impressions and views
+1x · max 4
+weighted total: organic + (ads × 0.25), aggregated across all platforms
+Under 100
+The story never left the building. Whatever was posted reached almost nobody, or nothing was posted at all. Mentors verify by opening the platform's native analytics (X post analytics, LinkedIn post views) on the builder's own device; if there is no post to show, this is the level.
+Example: a single launch post published at hour 7 from a personal account with 40 followers, no reposts, no hashtags, no communities tagged. Native analytics show 62 impressions, most of them the builder's own teammates refreshing the page.
+101 to 1k
+One or two posts went out and the builder's immediate network saw them. Reach is real but confined to first-degree connections. Mentors sum native impression counts across platforms on the builder's device, applying the 25 percent discount to any ad-boosted numbers before adding them in.
+Example: a demo-video post on X and a mirror on LinkedIn from an account with a few hundred followers, posted mid-hackathon. Combined native analytics show roughly 600 organic impressions, all from people who already follow the builder.
+1k to 2.5k
+The content escaped the first-degree circle. Multiple posts, a thread, or one post that got reshared pushed reach past the builder's own follower count. Mentors check that impressions exceed follower count as a sanity signal and sum across platforms, discounting ad-driven views to a quarter.
+Example: a build-in-public thread posted at hour 3 with a screen recording, updated twice during the day. A couple of peers repost it, a niche AI community channel links it, and combined analytics show about 1.8k impressions against a 500-follower account.
+2.5k to 5k
+The narrative found an audience beyond anyone the builder knows. At least one post is clearly outperforming the account's baseline, usually because a hook, demo clip, or angle worked. Mentors look for one breakout post in native analytics plus supporting posts, then total the weighted count live.
+Example: a 30-second agent-demo clip with a sharp one-line hook posted before lunch. It gets picked up by two mid-size accounts, sits at 3.5k impressions by judging time, and the builder can scroll the analytics graph showing the spike in the room.
+5k to 7.5k
+Genuine distribution inside 8 hours: the post is circulating on its own, impressions are still climbing at judging time, and reach is many multiples of the account's follower base. Mentors verify the total live across platforms and note the trajectory; anything beyond the band earns overflow points.
+Example: a launch post that a 20k-follower operator quote-tweets mid-afternoon. The original sits at 6k impressions and is still ticking up as the mentor watches; a LinkedIn mirror adds another thousand. Ad spend contributed 2k raw views, counted as 500 after the 0.25 discount.
+Overflow: Beyond 7.5k: +1 pt × 1x per additional 1,000 impressions
+Reactions and comments
+2x · max 8
+organic + (ad-driven × 0.25), aggregated across platforms
+Under 3
+Nobody responded. The post exists but generated essentially zero engagement, or engagement is only from the builder's own team, which mentors mentally exclude. Verified by opening the post itself and counting visible likes and comments on the builder's device.
+Example: a launch post with 2 likes, both from teammates sitting at the same table, and no comments. The mentor opens the post, taps the likers list, recognizes the team, and scores accordingly.
+3 to 10
+Courtesy engagement from the inner circle: a handful of likes and maybe one comment, mostly friends and fellow attendees. Real but shallow. Mentors count reactions plus comments across all platforms directly on the live posts, discounting ad-driven engagement to a quarter.
+Example: 7 likes and one 'this is cool!' comment on a demo post, all from mutuals and two people at neighboring tables. Nothing suggests the content resonated beyond people who were asked to engage.
+11 to 25
+The post provoked actual responses from strangers: comments asking how it works, requests for a link, small reply threads. Mentors skim the commenter list for accounts the builder does not follow and count the aggregate across platforms live.
+Example: a thread with 18 combined reactions where three commenters the builder has never met ask 'is this open source?' and 'does it work for Gmail?'. The builder replies in-thread during the day, which keeps the conversation visible.
+26 to 50
+Engagement has texture: substantive comments, people tagging others, at least one mini-discussion under the post. This is the level where the narrative itself, not just the network, is doing the work. Mentors count totals and spot-check that the comments are organic, not a like-exchange ring.
+Example: 35 reactions across X and LinkedIn, including a comment thread where two strangers debate whether the agent's approach beats an existing tool, and someone tags a friend with 'you were literally asking for this yesterday'.
+51 to 100
+The comments section is alive at judging time: dozens of reactions, strangers answering each other, feature requests, maybe pushback. Rare inside 8 hours from a standing start. Mentors verify the live count, exclude obvious spam or bot swarms, and apply overflow past the top of the band.
+Example: a launch post at 70 reactions where the top comment is a stranger's mini-review, someone has posted a screenshot of their own output from the tool, and the builder is visibly triaging replies between judging conversations.
+Overflow: Beyond 100: +1 pt × 2x per additional 10 reactions
+Amplification quality
+3x · max 12
+not volume, whose accounts reshared. Notable = 10k+ followers with domain authority
+None
+No one outside the team engaged with or reshared the content. Every visible interaction traces back to teammates or nobody at all. Mentors check the repost and quote lists on the live post; if they are empty or team-only, this is the level regardless of raw impression counts.
+Example: a post with decent impressions from hashtag browsing but zero reposts, zero quotes, and likes only from the builder's own three-person team. Reach without endorsement scores here.
+1-2 peer builders commenting or liking
+One or two identifiable builders, other hackathon participants or small dev accounts, engaged with the post. The first external signal that the story lands with people who make things. Mentors tap into the engager profiles live to confirm they are real builders, not throwaway accounts.
+Example: a fellow Hermes participant from another track likes the demo post and a 300-follower indie hacker comments 'clean execution'. Small, but it is the first proof anyone outside the room cares.
+3+ peer builders engaging, or 1 sub-10k-follower founder/operator engaging
+A cluster of peer builders is engaging, or one real founder or operator below the 10k-follower bar has commented or reshared. Identity matters more than count: mentors open the profiles and check for genuine shipping history or an operating role, not follower-count cosplay.
+Example: four indie hackers repost the demo clip within an hour of each other, or a 4k-follower founder of a small devtools company comments 'we tried building exactly this internally, DM me'. Either pattern lands at this level.
+1 notable (10k+) founder or operator reshare
+Someone with 10k+ followers and real domain authority put their name on the project by resharing or quote-posting it. One genuine notable is worth more than fifty peer likes. Mentors open the resharer's profile live, confirm follower count and that their authority is in a relevant domain.
+Example: a 25k-follower AI founder quote-tweets the launch post with 'this is the right way to do agent handoffs', driving a visible spike in the analytics graph. The builder shows the quote post and the profile side by side to the mentor.
+Multiple notables engaging, PH feature, press, or known investor amplification
+The project broke into institutional distribution: several notables engaging, a Product Hunt feature, press coverage, or a recognized investor amplifying it, all within the 8 hours. Mentors verify each claim at its source: the live PH page, the published article, the investor's actual post.
+Example: two 10k+ founders repost the demo, the project is live on Product Hunt collecting upvotes, and a well-known seed investor replies 'who built this?' under the launch post. Each artifact is pulled up live during judging.
+Visitors to product
+10x · max 40
+unique visitors from Datafast (recommended), or PostHog, Plausible, GA4. Read-only access required or capped at L2
+Under 10
+Nobody clicked through, or there is no way to prove they did. No analytics installed, no shareable dashboard, or a dashboard showing single digits. Note the cap in the parameter description: without read-only access for mentors, no team can score above L2 here no matter what they claim.
+Example: a deployed product with a launch post but no Datafast snippet installed until hour 6; the dashboard the mentor is shown has 7 unique visitors, 5 of them from the team's own IP range in the venue.
+11 to 50
+A trickle of real outsiders reached the product, typically the direct engagers from the launch post. Mentors get read-only dashboard access, check the uniques count, glance at referrer sources to confirm traffic matches the posts, and sanity-check against the impressions claimed upstream.
+Example: a Plausible dashboard showing 34 unique visitors, referrers split between t.co and linkedin.com, timestamps clustered in the hour after each post went live. The funnel is small but every number in it is honest.
+51 to 250
+Distribution is converting: a meaningful slice of the people who saw the story clicked through. Mentors verify uniques on the read-only dashboard and apply the anti-spoof lens: click-throughs way above 10 percent of claimed impressions suggest bought or botted traffic and trigger scrutiny, not points.
+Example: a Datafast dashboard at 140 uniques against roughly 3k claimed impressions, a plausible 4 to 5 percent CTR. Referrer breakdown shows X, LinkedIn, and one WhatsApp-shared bare URL. The mentor cross-checks the spike times against post times and they line up.
+251 to 1,000
+Real traffic. Hundreds of unique strangers hit the product inside the day, usually because one post broke out or a notable reshare landed. Mentors verify live on the dashboard, confirm upstream impressions can plausibly yield this count under the 10 percent CTR ceiling, and check geo and referrer diversity.
+Example: 420 uniques after a notable founder's quote-tweet at 2pm; the dashboard's hourly graph shows a clean spike at 2:10pm, referrers are 80 percent t.co, and geography spans well beyond the host city. Everything in the funnel tells the same story.
+1,000+
+The product had a genuinely viral day: four figures of unique visitors within 8 hours. At this scale mentors audit rather than admire: read-only access is non-negotiable, referrers must map to visible posts, and visitors must sit under 10 percent of weighted impressions or the excess is treated as spoofed.
+Example: 1,300 uniques driven by a front-page Product Hunt feature plus two notable reshares; the mentor scrolls the live dashboard, sees producthunt.com as top referrer, matches the traffic curve to the PH launch time, and applies overflow points per 100 visitors past 1k.
+Overflow: Beyond 1k: +1 pt × 10x per additional 100 visitors
+Signups or meaningful actions
+25x · max 100
+signup, install, account creation, first-use event. Team members do not count. Anonymous visits do not count. The heaviest virality parameter
+Up to 5
+Almost no one committed. A handful of signups at most, and after excluding team members and friends at the venue there may be nothing left. Mentors verify against the actual users table, waitlist backend, or install count, not a screenshot, and strike any row that traces to the team.
+Example: a waitlist with 4 emails, two of which are teammates' personal Gmail addresses and one is the builder's test account. One genuine stranger signed up from the launch post. Scores the level, barely.
+6 to 25
+The first real strangers converted: people who saw the story, clicked through, and handed over an email or created an account. Mentors scroll the live user list or event log, spot-check a few entries for realness (plausible emails, staggered timestamps), and confirm none are team.
+Example: 15 waitlist signups over the afternoon, timestamps trailing each social post by minutes, emails from varied domains. The builder screen-shares the Supabase auth table and the mentor picks two rows at random to inspect.
+26 to 100
+Conversion at real volume: dozens of outsiders took the meaningful action, proof that both the narrative and the landing experience work. Mentors verify the count in the backend and apply the anti-spoof ceiling: signups above 50 percent of unique visitors read as fabricated and get investigated, not rewarded.
+Example: 60 account creations against 140 unique visitors, a strong but believable 43 percent conversion on a one-field signup. The event log shows a steady drip all afternoon rather than a suspicious block of 40 signups in three minutes.
+101 to 250
+A breakout: over a hundred strangers signed up within 8 hours, which almost always needs a viral post plus a frictionless funnel. At 25x weight this level alone outscores maxing every other parameter, so mentors audit hard: live backend access, timestamp distribution, visitor-to-signup ratio under the 50 percent cap.
+Example: 180 installs of a Chrome extension after a notable reshare, verified on the live Chrome Web Store stats page, with the analytics dashboard showing 500+ uniques upstream so the conversion math holds. The mentor watches the install count tick up during the conversation.
+251 to 1,000
+Hundreds of real users in a single day: the funnel worked end to end at scale, from impressions through visitors to committed signups, with every ratio inside the anti-spoof bounds. Mentors reconcile all three layers live: weighted impressions, dashboard uniques, and backend signups, and grant overflow past 1k.
+Example: 400 signups on a free AI tool that hit Product Hunt's front page and got two notable quote-tweets; 1,100 dashboard uniques upstream keep conversion at 36 percent, timestamps mirror the traffic curve, and the builder walks the mentor through the raw users table sorted by created_at.
+Overflow: Beyond 1k: +1 pt × 25x per additional 50 signups
+Virality total
+4 + 8 + 12 + 40 + 100 = 164 base points. Overflow uncapped.
+
+Anti-spoof checks (Virality only).
+Two ratio checks run on every submission. When both flags trigger: manual review.
+
+Impressions → visitors
+10% CTR max
+Max plausible: 1 visitor per 10 weighted impressions. Breach it and the visitors parameter drops to L1 (0 pts) unless the team proves a verifiable non-social traffic source.
+Visitors → signups
+50% conv. max
+Max plausible: 1 signup per 2 visitors. Breach it and the signups parameter drops to L1 (0 pts) unless the team proves a verifiable direct-share source.
+Power-ups on this track.
+Do the integration, earn the points: +25 per partner, no cap, all six = +150. Real use only, a mentor has to see it working in your build.
+
+Power-up	Points	Counts when	Evidence
+Wispr Flow
+25 points
+500+ words dictated during the event.
+Wispr stats screenshot.
+ElevenLabs
+25 points
+Voice does real work in the product, not a dead snippet.
+Live demo of the interaction.
+Convex
+25 points
+Convex stores real product state or is the main backend.
+Repo + Convex dashboard.
+Linkup
+25 points
+Live search doing real work in the product.
+Code + live query.
+Dodo Payments
+25 points
+Live checkout in the product (an activated account alone earns nothing).
+Dodo dashboard + live checkout.
+Cloudflare
+25 points
+Hosting, Workers, or any CF product doing real work.
+Live URL + CF dashboard.
+Track 02 · 208 base + overflow
+Revenue.
+Real demand in an 8-hour window is rare, so the rubric weights observable signals: signups, product quality, and real money moved. The VC-lens parameters (business impact, right to win, why now, moat) stay in as directional signals but carry lower weight. 100% live product. No decks.
+
+Scroll sideways to read all five levels.
+
+Parameter	L1	L2	L3	L4	L5
+Signups
+20x · max 80
+root parameter. Email + first-use event (created an account, generated an output, ran the core flow). Team members do not count. Anonymous visits do not count
+0
+No email plus first-use event exists from anyone outside the team. A landing page with traffic but no accounts, or accounts created only by teammates, both score here. Mentor checks the auth table or analytics live and finds no external user who completed the core flow.
+Example: the team demos a working product but the user list shows 4 rows, all teammate emails. Their tweet got 300 views, yet the signup event stream in the analytics tool is empty. Traffic without accounts is still zero.
+1 to 25
+A handful of real outsiders signed up and triggered a first-use event: account created plus an output generated or the core flow run. Mostly pulled in one by one via DMs. Mentor scrolls the user table live and spot-checks that emails are not teammates and that each has a usage event.
+Example: 14 signups by 4pm, sourced from a WhatsApp group and cold DMs. Mentor picks three random emails from the dashboard; each has a generated output attached and none match the team roster on the badge list.
+26 to 100
+Growth has moved past personal begging into at least one channel that converts: a launch post, a community drop, a share loop. Signups arrive while the team is not actively recruiting. Mentor watches the live signup feed, checks the timestamp spread across the day, and verifies first-use events fire for most accounts.
+Example: 61 signups, of which 40 came from one Reddit post that hit r/sideproject. The team shows the analytics funnel: 800 visits, 61 accounts, 44 who generated their first output. Two signups land while the mentor is watching.
+101 to 250
+The team found real distribution: multiple channels or one that caught fire, converting at a healthy rate. Activation holds up, so these are users, not empty accounts. Mentor audits the dashboard for source breakdown, checks activation rate on first-use events, and samples emails against the team and their friends.
+Example: 180 signups from a launch post plus two LinkedIn threads. The dashboard shows 2,400 visitors, 180 accounts, 130 who ran the core flow. Mentor filters signups by hour and sees a steady curve across the afternoon, not one suspicious spike of lookalike emails.
+251+
+Signups compound without the team pushing; sharing or word of mouth is visible in referral data. At this volume the mentor's job is fraud control: sample emails for disposable domains, confirm first-use events at scale, and check that the growth curve matches the story of where the users came from.
+Example: 320 signups after a demo clip went semi-viral on X. Analytics shows 60 percent of late signups arriving via shared output links. Mentor samples 10 accounts: real domains, real generated outputs, timestamps spread over 5 hours. Overflow applies beyond 250.
+Overflow: Beyond 250: +1 pt × 20x per additional 50 signups
+Live product quality
+8x · max 32
+time to first value, task completion rate, UX craft, perceived differentiation
+Broken
+The deployed product cannot deliver its promise even once. Crashes, dead buttons, a demo video standing in for a live app, or a flow that dies before value. Mentor opens the URL fresh on their own device and tries the core action; if it fails or requires the team to drive, it is broken.
+Example: the mentor opens the link on their phone, taps the main CTA, and gets a 500. The team says it works on their machine and offers a Loom recording instead. In a 100 percent live-product track, the recording counts for nothing.
+Rough MVP, happy path only
+One narrow path delivers value; any deviation breaks it. Unstyled screens, no error states, confusing entry point. Mentor runs the happy path once, then deliberately deviates: hit back, submit an empty form, try a weird input. The happy path survives, everything else falls over.
+Example: an AI proposal writer that works when you fill all fields in order, but a blank company name throws a raw stack trace on screen and a refresh loses the draft. Value is real but only the builder could navigate to it without help.
+Working product, does what it claims
+A cold user reaches first value unassisted in a couple of minutes. Core flow is reliable, basic errors handled, copy explains itself. Mentor hands their own phone to a passerby, or plays a naive user themselves, and times the run without letting the team touch the device or narrate.
+Example: the mentor signs up with a fresh email, uploads a resume, and gets a tailored cover letter in 90 seconds with no guidance. A malformed PDF gets a friendly retry message instead of a crash. Nothing dazzles, but nothing lies.
+Polished, noticeably better than alternatives
+Craft shows: fast time to first value, thoughtful empty and loading states, onboarding that teaches by doing, output that beats the incumbent tool. Mentor does the same job in the product and in whatever users use today, and the difference is obvious without the team explaining it.
+Example: an invoice chaser where connecting Gmail to first automated reminder takes under a minute. The mentor compares against doing it manually with ChatGPT plus email; the product wins on speed and output quality, and small touches like inline previews show up throughout.
+10x product, magical onboarding, mentor cannot tell it was built in 8 hours
+The product feels like a funded team's public launch. Onboarding creates an aha moment in the first session, the core loop begs to be shared, and quality survives adversarial poking. Mentor tries hard to break it and to find any tell of hackathon scaffolding, and fails, then watches a stranger get delighted unprompted.
+Example: a stranger recruited from the venue lands on the site, gets a personalized output in 30 seconds, says it is genuinely good, and shares the link to their own feed without being asked. Mentor probes edge cases for five minutes and finds nothing that betrays 8 hours of build.
+Revenue generated (USD)
+12x · max 48
+real money moved during the event. Stripe, Razorpay, any payment processor. Not services
+$0
+No completed payment exists, or the only revenue fails the rules: teammate or friend payments, money for services rather than the product, or pledges without a transaction. Mentor opens the payment dashboard live; an empty or test-mode-only transaction list scores here regardless of promises to pay Monday.
+Example: the team shows a Dodo Payments checkout that works and two DMs saying they would totally pay. The live-mode dashboard shows zero transactions. Intent is scored under pain severity; this parameter only counts settled money.
+Up to $25
+Small but real: one or a few payments from people outside the team and their friend circle, for product access rather than a service. Mentor opens the live payment dashboard, matches payer emails against signups and the team roster, and applies the removal test: kill the product tomorrow and this money stops.
+Example: the Dodo Payments dashboard shows one live payment of $9 from a buyer the team met in a Discord server. The buyer's email matches a signup with usage events, and their quote in the submission says exactly what they bought. Passes the removal test cleanly.
+$25 to $100
+More than a lucky single sale: several independent buyers paid a stated price. Mentor scans the dashboard for payer diversity across domains and sources, confirms none are teammates or friends, and checks the money is for the product itself, not for consulting delivered under its banner.
+Example: $68 across five payments on the Dodo dashboard: four at $12 monthly and one $20 one-off unlock. Mentor spot-checks two payer emails against the signup list and finds real usage before purchase. One buyer replied that it is cheaper than their VA when asked why they paid.
+$100 to $500
+Repeatable path from stranger to paid: buyers arrived through the product funnel, not only through one-on-one persuasion. Mentor traces two or three payments end to end in the dashboard: source, signup, usage, checkout, and confirms refund-free settled totals with no friendly-fire payments.
+Example: $240 from 14 buyers, most of whom hit the paywall after their third free generation. Mentor picks a random payer, finds their signup at 2:14pm, six generations, and an upgrade at 3:02pm, all self-serve. The team never spoke to 11 of the 14 buyers.
+$500+
+Serious money from a real market, spread across buyers, not one whale friend. At this level the mentor audits legitimacy: refund rate, buyer independence, whether large payments come from entities with a prior relationship to the team, and whether the removal test holds for every big line item.
+Example: $610 on the Dodo dashboard: 30 buyers averaging $20, largest single payment $49, zero refunds. Mentor calls one buyer from the transaction list on speaker; they describe the product unprompted and confirm they would cancel if it disappeared. Overflow applies past $500.
+Overflow: Beyond $500: +1 pt × 12x per additional $100
+Waitlist
+4x · max 16
+email drop on a landing page. User has not touched the product. Lower weight than signups because intent without commitment
+0
+No email capture exists, or it exists and nobody outside the team dropped an email. Mentor checks the form backend live: the Tally dashboard, Google Sheet, or DB table. This parameter only covers people who have not touched the product; anyone who signed up and used it belongs in Signups instead.
+Example: the landing page has a join-waitlist field wired to a Google Sheet with two rows, both teammate emails. The team pivoted to pushing signups instead, so this cell scores 0 while their Signups row does the heavy lifting.
+1 to 50
+A trickle of real emails collected before product access, mostly from personal reach-outs. Mentor opens the sheet or form dashboard, checks timestamps fall within the event, and dedupes against the team roster and against the signup list so nobody is counted twice across parameters.
+Example: 23 emails in a Tally form from a LinkedIn post teasing a pro tier that is not built yet. Mentor scrolls the entries: varied domains, timestamps spread from 11am to 4pm, none matching team badges or existing product accounts.
+51 to 250
+The landing page converts people arriving from a real channel, not just the founders' contacts. Mentor looks at referrer data and the visit-to-email conversion rate, scans for disposable domains and copy-paste bursts, and asks what was promised so the pitch matches what the product will be.
+Example: 140 emails after a post in three college WhatsApp groups plus one X thread. Analytics shows 1,100 page views converting at 13 percent. Mentor samples 10 emails: student and gmail domains, no plus-aliased duplicates, entries spread across the whole afternoon.
+251 to 1,000
+Demand at a scale that implies a real channel win or an audience the team can mobilize. Mentor audits the collection mechanism for incentive distortion, since giveaways and follow-for-entry contests inflate this, checks domain and source diversity, and confirms entries could plausibly convert to users.
+Example: 430 emails from a launch teaser that a mid-size newsletter picked up. The email tool's dashboard shows the spike at 2pm with a sustained trickle after. No lucky-draw mechanics on the page; the CTA promises early access only, so the intent reads clean.
+1,000+
+Four-figure demand inside 8 hours means something genuinely spread. The mentor's job is discounting manufactured volume: bot-check a sample, inspect the referrer mix, verify the count in the tool itself rather than a screenshot, and confirm the pitch was for this product, not a generic giveaway.
+Example: 1,600 emails after a demo video crossed 200k views. Mentor logs into the form tool with the team, watches the count tick up live, and samples 20 entries: real domains, plausible names, referrers matching the viral post. Overflow adds points per additional 250 entries.
+Overflow: Beyond 1k: +1 pt × 4x per additional 250 entries
+Business impact
+4x · max 16
+the money math behind the build: who pays for this problem, how often, and what moves when the product handles it
+No business case articulated
+The team has not connected the product's job to any cost, revenue, risk, hiring, SLA, or conversion metric. The build is interesting but does not link to a business outcome.
+Example: a polished tool with no answer to the two basic questions: who pays for this problem today, and what changes for them if the product handles it.
+Weak case: likely below 5% projected movement
+The team names a metric, but the projected movement is small or the link between the product's work and the metric is vague.
+Example: the product handles a minor support issue, but team cost, ticket volume, refunds, fraud loss, conversion, or hiring throughput would barely shift even if it worked perfectly.
+Clear case: 5 to 10% projected movement on one meaningful metric, math shown
+The team can show the math: who pays for the problem, how often it happens, and what changes when the product handles it.
+Example: solving it would save around ₹2 crore a month, move 2 to 5 percent of bottom line, reduce a visible share of callbacks, or improve turnaround time for a function.
+Strong case: 10 to 30% projected movement, metric, baseline, and prize named
+The team can name the metric, the current baseline, and the size of the prize.
+Example: it would reduce dispute losses by 30 percent, contribute 5 to 7 percent to bottom line, reduce a large support load, or improve hiring velocity for a critical function.
+Top-priority case: 30%+ movement on a top metric, path to material impact
+The team has connected the product to a real bottleneck and can show a path to material impact.
+Example: it would save ₹10 crore or more, contribute 20 to 30 percent to bottom line, remove 70 to 80 percent of a function's workload, help close one large enterprise account, or enable one critical leadership hire.
+Right to win
+2x · max 8
+founder-market fit + insight. Unfair advantage = 10x better shot than a random team
+Team could be anyone
+Nothing about the team's background, access, or insight connects to the problem; the idea came from a brainstorm, not lived exposure. Mentor asks why you, and gets a generic answer about execution speed or passion that any team in the room could give word for word.
+Example: three CS students building a dental clinic CRM. None has met a dentist, they picked the idea from an AI-ideas listicle that morning, and their answer to why you is that they ship fast. So does every other team in the room.
+Generic interest in the space
+The team cares about the domain as consumers or fans: they follow it, maybe use the tools, but have no operator experience, no distribution, and no non-obvious insight. Mentor probes for something they know that outsiders do not; what comes back is available in any YouTube explainer.
+Example: a fitness-tracking agent built by gym-goers. They know the apps as users and quote influencer takes, but when the mentor asks what trainers actually struggle with in billing or client retention, they have no firsthand answer.
+Some domain exposure
+One member has touched the problem space through an internship, a freelance gig, a family business, or a serious hobby. They know real vocabulary and one or two genuine pain details, but the insight is thin and access to buyers is limited. Mentor tests depth with a practitioner-level question and gets a partial hit.
+Example: building for wedding photographers; one teammate second-shot weddings for two seasons. He correctly names culling as the time sink and knows the going rates, but cannot say how studios decide which editor to trust, and the team knows no studio owners to sell to.
+Direct operator or domain experience, clear insight
+Someone on the team has done this job or run this workflow, and the build encodes a specific non-obvious insight from that experience. Access to first customers comes from their own network. Mentor asks what the product gets right that a smart outsider would botch; the answer is concrete and checkable in the build.
+Example: an ex-collections agent builds a dunning agent that never calls on salary-credit day and opens in the debtor's language, both encoded as defaults. Her first three signups are former colleagues' agencies. The mentor's outsider question about just emailing more gets a scar-tissue answer.
+Deep founder-market fit, unfair advantage visible in the build itself
+The advantage is not claimed, it is observable in the product: proprietary data, distribution, or judgment that a random team could not replicate even with more time. Mentor could verify it without hearing the pitch, by spotting in the live product something only this team could have shipped today.
+Example: a menu-pricing agent by someone who ran 3 cloud kitchens, shipped with her own 18 months of order-level data powering the recommendations and 200 restaurant-owner WhatsApp contacts driving day-one signups. The mentor sees the data advantage in output quality before hearing the resume.
+Why now
+1x · max 4
+weak: "AI is hot." Strong: specific unlock (capability, regulation, behavior shift) in recent past
+Could have been built 5 years ago
+The product depends on no new capability, regulation, or behavior shift; incumbents had every chance to build it. AI as a coat of paint on an old workflow scores here if the workflow was equally buildable pre-LLM. Mentor asks why the incumbents never shipped it and gets no structural answer.
+Example: a form-based expense tracker with an AI chat bolted on. Every core feature ran fine on 2019 tech, the chat adds nothing to the job, and the team has no answer for why Expensify never shipped it beyond claiming incumbents are slow.
+Riding general trends
+The timing story is a macro wave, not a mechanism: AI adoption is up, everyone wants agents. True, but it applies equally to every team in the room and picks no winner. Mentor asks what specifically changed that makes this product possible or urgent now; the answer stays at the trend level.
+Example: the entire why-now argument is that hundreds of millions of people now trust AI chatbots. Asked what capability their product needs that did not exist 18 months ago, the team concedes that earlier-generation models handle their use case fine.
+Clear tailwind in last 2 years
+The team names a concrete change from the last two years, such as a capability crossing a quality bar, a regulation, or a platform shift, and links it causally to why this product works now and did not before. Mentor checks the causality: would the product genuinely fail without that shift?
+Example: voice models crossed real-time latency in 2024, so phone-based order-taking became viable; the team's restaurant agent was impossible when round-trips took 4 seconds. The mentor tests the claim by imagining the product on 2023 tech and agrees it dies.
+Specific unlock in last 12 months
+The team cites a specific, verifiable event from the past year, such as a model release, an API opening up, or a regulation taking effect, without which their exact product could not exist or would not sell. Mentor can check the date and confirm the dependency is real in the build, not decorative.
+Example: reliable computer-use APIs shipped within the last year; the team's agent files GST portal returns by driving the browser, which no official API allowed before. Mentor watches the agent drive the portal live and confirms the product is structurally impossible without that unlock.
+Window opened under 6 months ago, visible in the product
+The enabler is so fresh it is observable in the live build, not just cited: the product does something that was demonstrably impossible or absurdly expensive two quarters back, and the team can show the before and after. Mentor sees the new capability doing load-bearing work in the live demo.
+Example: the product generates a full personalized video reply per user for under a cent, riding a generation-cost collapse from this spring. The team shows the same output costing $4 at January pricing. The window is open, visible in the unit economics, and closing as competitors notice.
+Moat and defensibility
+1x · max 4
+taste counts as moat when it shows up in product craft (Linear, Superhuman)
+Copyable in a weekend
+The whole product is a prompt plus a UI on a public model; watching the demo is a sufficient spec to clone it. No data, no distribution, no craft that resists copying. Mentor asks what a competent stranger would still be missing after two days of rebuilding; the honest answer is nothing.
+Example: paste a job description, get a cover letter, powered by one system prompt. The mentor could reproduce the entire product from the landing page copy alone, and three other teams in the room effectively already have.
+Thin, first-mover only
+Some execution lead exists, such as a niche found or an audience touched first, but nothing structural stops a fast follower with more resources. Mentor grants the head start and asks what compounds from it; the team's answer is speed, which is a strategy, not a moat.
+Example: the first AI agent for CA firms' notice replies, launched today with 30 signups. Nothing in the product deepens with use: a competitor shipping next month starts from the same place. The team's defense is that they will keep shipping faster, with nothing accruing underneath.
+Workflow lock-in, integrations, taste
+Defensibility shows up in the product: it sits inside the user's daily workflow via integrations, holds their configuration or history, or wins on craft so distinct that clones feel wrong; taste counts, per Linear and Superhuman. Mentor asks a real user what switching would cost them and gets a concrete answer.
+Example: the agent lives in the agency's Slack, reads their Notion templates, and has learned each client's tone settings. A signup tells the mentor that moving means redoing two hours of setup and retraining it on their voice. The polish is distinctive enough that a clone would read as a knockoff.
+Data flywheel, network effects, switching costs
+At least one compounding mechanism is live, not planned: usage generates data that improves the product, each new user makes it better for others, or accumulated state makes leaving expensive. Mentor asks to see the mechanism operating today, in the dashboard or the product, not on a roadmap slide.
+Example: a pricing agent where every accepted or rejected quote trains the recommendations; the team shows accuracy improving across the day as 60 users fed it 400 decisions. New signups get better suggestions because earlier ones existed. The flywheel is small but demonstrably turning.
+Compounding moat: proprietary data + network effects strengthen with scale
+Multiple moats reinforce each other: proprietary data no one else can collect, network effects pulling users in, and switching costs holding them, each strengthening the others as the product grows. Mentor maps the loop and checks each link exists in the live product today, even at hackathon scale.
+Example: a marketplace agent matching creators to brands: every completed deal adds outcome data that sharpens matching, better matches attract more brands, more brands attract creators, and both sides accumulate reputation they cannot port. All four links are live with 12 real deals by evening.
+Revenue total
+80 + 32 + 48 + 16 + 8 + 8 + 8 + 4 + 4 = 208 base points. Signups, revenue generated, and waitlist overflow on top, uncapped.
+
+What counts as revenue
+Money earned from selling a product, not your team's time. Qualifies: paid signups (Stripe, Razorpay, one-time or subscription), API or usage fees, paid digital goods, premium upgrades. Does not qualify: consulting, agency, or done-for-you fees, human-in-the-loop work the team performs manually, payments from team members or friends, gifts reframed as revenue.
+
+The test: if you removed the product tomorrow, does the revenue also disappear? If yes, it counts.
+
+Power-ups on this track.
+Do the integration, earn the points: +25 per partner, no cap, all six = +150. Real use only, a mentor has to see it working in your build.
+
+Power-up	Points	Counts when	Evidence
+Wispr Flow
+25 points
+500+ words dictated during the event.
+Wispr stats screenshot.
+ElevenLabs
+25 points
+Voice does real work in the product, not a dead snippet.
+Live demo of the interaction.
+Convex
+25 points
+Convex stores real product state or is the main backend.
+Repo + Convex dashboard.
+Linkup
+25 points
+Live search doing real work in the product.
+Code + live query.
+Dodo Payments
+25 points
+Live checkout in the product (an activated account alone earns nothing).
+Dodo dashboard + live checkout.
+Cloudflare
+25 points
+Hosting, Workers, or any CF product doing real work.
+Live URL + CF dashboard.
+Track 03 · 164 base + overflow
+AI as Agency.
+A team of AI agents replaces a full human function. A manager agent plans, specialists execute, handoffs pass work between them, memory persists across tasks, and a control surface lets a non-engineer assign work. The framework: if an agency was run with agents instead of humans, how would it work?
+
+Scroll sideways to read all five levels.
+
+Parameter	L1	L2	L3	L4	L5
+Working product shipping real output
+20x · max 80
+root parameter. Real surface = a system a paying customer could use tomorrow. Staged WordPress or sandbox Gmail = L3 max. Overflow past L5: +1 pt × 20x per additional real task completed autonomously during judging
+Demo only, canned responses. 0 completed tasks
+The agents talk through the workflow but do not complete the declared job. No usable output lands anywhere. No data flows in or out of any system.
+Example: the crew says it screened a candidate, but no scorecard, ATS update, rejection, shortlist, or next-step decision is created. It talks about modifying an order but never checks the order or writes to a queue.
+Agents run but output is broken or hallucinated. Under 30% task success
+The crew executes, but the output is broken, fake, incomplete, or unusable. Mentors verify by re-running the task and checking whether anything true and usable was produced.
+Example: in payments, it pulls the wrong transaction or reports a refund as reversed without checking the payment record. In quick commerce, it says the delivery slot changed but nothing changed in the queue, sheet, or order system.
+Working output on staged or test surfaces. 50 to 70% task success
+The crew completes a useful part of the declared job and creates at least one usable artifact. Staged WordPress, sandbox Gmail, dummy ATS, mocked CRM, Airtable, Notion, or Google Sheets all live here. This is the ceiling for staged surfaces.
+Example: the crew verifies an order against a mocked order DB, writes to a mocked dispatch system, updates a sandbox support queue, creates a scorecard, or classifies a payment dispute and files it in a test tracker.
+Real output on real surfaces, human approves every step. 70 to 85% task success
+The crew completes most of the declared job across a realistic workflow: it retrieves, classifies, decides, and writes on the happy path, but a human reviews before anything final moves, and edge cases break it.
+Example: the crew drafts the refund ticket inside the real support queue, but a support lead must approve the refund. In hiring, it runs the first-round screen and drafts the scorecard in the ATS, but a recruiter must review and move the candidate.
+End to end on real live surfaces, 85%+ success across 3+ repeated runs, escalates by exception only
+The crew completes the declared job without judge intervention: it retrieves, classifies, decides, writes, and escalates by exception only, handing edge cases to a human with full context instead of a restart. Output lands on real live surfaces (live site, real ATS, real support queue, real repo) at production quality.
+Example: in quick commerce, the crew verifies the order, finds missing items, checks refund eligibility, writes back to the queue, updates the ticket, and escalates only exceptions. In hiring, it detects the role, runs the right screen, scores the candidate on the right rubric, updates the ATS, and advances or rejects without HR involvement.
+Agent org structure
+5x · max 20
+how the agent team is organized. Flat vs managed, static vs dynamic delegation
+One monolithic agent does everything
+A single agent with one giant prompt handles the entire function; there is no division of labor. A mentor verifies by opening the trace of any run: one agent, one context, every responsibility crammed together.
+Example: a legal crew is really one prompt that does intake, clause review, risk flagging, and redline drafting in a single context window, and the trace of a contract review shows exactly one actor.
+2-3 agents with hardcoded handoffs, no manager
+Work is split, but the pipeline is fixed: agent A always hands to agent B in the same order, with no one deciding what the task actually needs. A mentor verifies by giving a task that should skip a step and watching the pipeline run it anyway.
+Example: a hiring crew's resume screener always hands off to the interview scheduler in a fixed chain, so a candidate who was rejected at screening still flows through the scheduling agent before being dropped.
+Clear roles (manager + specialists), static routing
+There is a real org: a manager and named specialists with distinct jobs. Routing, though, follows a fixed table rather than a plan. A mentor verifies by asking who does what, then checking the trace shows the manager dispatching by category, not reasoning about the request.
+Example: a support manager agent routes billing tickets to the billing specialist and technical tickets to the tech specialist via a fixed routing table, and a mixed billing-plus-bug ticket still goes to exactly one lane.
+Dynamic: manager agent plans subtasks based on the specific request, delegates, reviews outputs
+The manager reads the specific request, decomposes it into subtasks, assigns them, and reviews outputs before accepting them. A mentor verifies by giving two structurally different requests and confirming the trace shows different plans, plus at least one output sent back for revision.
+Example: given "launch a campaign for the new feature", a marketing manager agent plans copy, visual, and publish subtasks, assigns each to a specialist, and bounces the first draft of the copy back with concrete revision notes before approving.
+Emergent org: manager spawns sub-specialists on the fly, agents escalate when stuck, roles self-adjust to task
+The org itself is dynamic: the manager spawns new specialists when a task demands one, stuck agents escalate with a concrete blocker instead of failing quietly, and roles adjust to the task. A mentor verifies by finding a run where the trace shows a role that did not exist at kickoff.
+Example: mid-task, an engineering crew's manager spawns a database-migration specialist because a subtask uncovered a schema change, and a stuck test-writer agent escalates back up with the exact failing case rather than looping.
+Observability
+7x · max 28
+tool-agnostic. What a mentor can see about the system matters, not the logo
+console.log or print statements only
+The only window into the system is raw prints scrolling past in a terminal. Nothing is stored in a queryable form. A mentor verifies by asking to see what happened in a run from an hour ago: if the answer is scrollback or nothing, it is this level.
+Example: asked why the sales crew emailed the wrong prospect this morning, the team scrolls a terminal buffer of print statements and admits the earlier output has already scrolled away.
+Structured logs written to a file, no UI
+Events are captured in a structured, persistent form (JSONL, database rows), so runs can be reconstructed, but only by grepping or writing queries. A mentor verifies by asking for a specific past run and watching the team dig it out of files by hand.
+Example: a hiring crew writes one JSON line per agent step to a log file, and the team greps by candidate email to piece together, event by event, what happened to yesterday's rejected applicant.
+Can pull up a specific run and see what each agent did, step by step (any tool: custom, self-hosted OSS, SaaS, OTel)
+There is a real viewing surface: pick a run, see what each agent did in order, with inputs and outputs. Custom dashboard, self-hosted OSS, SaaS, or OTel all count equally. A mentor verifies by naming a past run and watching the team open it and walk it live.
+Example: the mentor picks a support ticket that failed yesterday, and the team opens that exact run in their self-hosted dashboard and steps through what the triage agent read, decided, and passed on.
+Trace tree across agents (who called whom), token and cost per step, filter by agent or task
+The view shows who called whom as a tree, with tokens and cost attributed to every step, and it can be sliced by agent or task. A mentor verifies by asking a pointed question, like which agent spent the most this morning, and getting the answer from the tool, not from memory.
+Example: the trace for one campaign shows the manager calling the researcher then the writer as a tree, with tokens and dollars on each node, and the team filters to just the writer's steps across all of today's tasks.
+Production-grade: diff two runs side by side, alerts on failure or cost spike, search across runs, senior eng would trust this to debug prod
+This is tooling a senior engineer would trust to debug prod: put two runs side by side and diff them, get alerted on failures or cost anomalies, search across all runs. A mentor verifies by asking the team to explain a regression using the diff view and to show an alert that actually fired.
+Example: the team diffs a passing and a failing contract-review run side by side, pinpoints the step where the clause extractor's output diverged, and shows the alert that fired when a run's cost spiked to 4x the baseline.
+Evaluation and iteration
+5x · max 20
+ability to improve the system over time. Manual vs closed-loop
+No evals
+There is no defined way to tell whether the system got better or worse. Changes ship on vibes. A mentor verifies by asking how they know the current version beats the previous one; if the answer is a feeling rather than a measurement, it is this level.
+Example: asked how they know v2 of the outreach crew writes better emails than v1, the team says it feels sharper, and cannot point to a single input both versions were run on.
+Manual spot-checks ("this run looked fine")
+Quality is checked by eyeballing a handful of favorite runs after each change. There is no fixed set and no scores, so regressions on untested inputs slip through. A mentor verifies by asking which inputs get re-checked after a change and whether the results are recorded anywhere.
+Example: after tweaking the support agent's prompt, the team re-runs the same three tickets they always use, skims the replies, declares them fine, and writes nothing down.
+Named eval set exists, run manually to compare versions
+There is a fixed, named set of test cases with expected outcomes, and the team runs it by hand before and after changes to compare scores. A mentor verifies by asking to see the set, its size, and the score of the current version versus the last one.
+Example: a hiring crew keeps 25 held-out resumes with agreed screen or reject decisions, runs the set manually before merging a prompt change, and shows the pass count moving from 19 to 22.
+Automated eval pipeline, CI-style, fails a release if quality drops
+Evals run automatically on every change, and a quality drop actually blocks the release rather than just printing a warning. A mentor verifies by asking to see the pipeline config and one real instance where a release was stopped by a failing eval.
+Example: every prompt PR for the marketing crew triggers the eval suite in CI, and the team shows a real blocked merge from Tuesday where landing-page copy quality dipped below the release threshold.
+Closed-loop: failed runs feed a growing eval set, version-controlled prompts and agents, measurable gains across versions
+Production failures automatically become new eval cases, prompts and agent definitions are version-controlled, and quality is demonstrably climbing across versions. A mentor verifies by tracing one real failure into the eval set and seeing the score trend across versions.
+Example: every support ticket that escalates to a human is auto-captured as a new eval case, and the team pulls up a chart of pass rate rising across v1 through v4, with each version's prompts tagged in git.
+Agent handoffs and memory
+2x · max 8
+does context survive between agents and across tasks?
+Remembers nothing, every turn starts from zero
+The agents do not carry information from one part of the task to the next. The user re-introduces themselves, re-states the issue, and re-supplies the same details every turn. Across handoffs, each new agent starts from scratch.
+Example: every applicant is treated like a new applicant. In quick commerce, the first agent asks for the order ID, the second agent asks for the same order ID again, and the refund agent has no idea the user already explained missing items.
+Holds one or two basic fields within the task
+The agent remembers who it is dealing with or one identifier, but not the actual task context. The user does not have to repeat their name, but they do have to re-explain what they came for. Across handoffs, only basic identity passes through. The next agent re-asks for everything that matters.
+Example: in payments, the verification agent confirms the user's phone number and UTR, but the dispute-classification agent again asks what transaction the user is talking about.
+Holds context within a single task, lost at handoff
+The agent remembers earlier turns inside the same run. It does not repeat questions, uses earlier answers when relevant, and tracks the state of the current task. Context does not survive a handoff. The next agent re-asks for the task details.
+Example: during one support run, the agent remembers the missing-item refund issue and uses earlier answers in later steps. In hiring, it remembers the candidate's answers inside the screen but loses them by the next round.
+Holds context across the task and one or two handoffs
+The agent remembers the user's recent history (past orders, past disputes, earlier answers in the same interview) and uses it for follow-up decisions. Relevant context passes forward to the next agent in the chain.
+Example: in quick commerce, the agent knows the user has modified orders multiple times before and uses that to decide whether to allow another modification or escalate. In hiring, the second-round agent has the first-round notes and asks deeper follow-ups instead of starting over.
+Full relevant history and policy knowledge (now + this user's past + business rules), survives all handoffs
+The crew uses three layers of memory in practice, even if it does not call them by name. What is happening now: the current task, order, UTR, candidate, or ticket. What has happened before with this user: past orders, past disputes, past screens, prior escalations. What the business allows: refund rules, hiring rubrics, escalation logic, policy limits, and team norms.
+Example: in payments, the agent picks up where the last case left off, knows the user's dispute history, applies the refund rule that matches, and escalates only when policy says it should. In hiring, the agent has the candidate's full application history, knows the role rubric, and tailors follow-ups to gaps in earlier answers.
+Cost and latency per task
+1x · max 4
+lower tier (slower or more expensive) governs
+Over 30 min OR over $5
+A single task breaching either bound lands here, since the lower tier governs. This is too slow or too expensive to replace the human function it claims to. A mentor verifies by timing one live run end to end and reading its cost off the trace or provider dashboard.
+Example: one candidate screen in the hiring crew loops for 40 minutes of agent back-and-forth and burns about $7 in tokens before the ATS is finally updated.
+10 to 30 min OR $2-$5
+Tasks complete in tens of minutes or a few dollars each. Whichever measure is worse sets the level. A mentor verifies with a timed live run plus per-run cost from the trace; if either number falls in this band and neither is worse, this is the score.
+Example: resolving one real support ticket end to end takes the agency 18 minutes and roughly $3 in model spend, both readable from the run's trace.
+5 to 10 min OR $0.50-$2
+Tasks land inside single-digit minutes or under two dollars, with the worse of time and cost governing. A mentor verifies by re-running a representative task live, stopwatch on, and matching the cost shown in the trace against the claim.
+Example: the marketing crew ships a new landing-page variant to the site in about 8 minutes at roughly $1.20 per run, verified from a timed live re-run.
+1 to 5 min OR $0.10-$0.50
+Tasks finish in a few minutes for cents, fast and cheap enough to run many times a day. The worse of the two measures still governs. A mentor verifies with a live timed run and per-step cost from the trace summing into this band.
+Example: the sales crew researches a prospect, writes the email, and sends it from the real inbox in about 3 minutes for roughly $0.25 per task.
+Under 1 min AND under $0.10
+Both bounds must hold at once: sub-minute latency and sub-dime cost on a real task, not a trivial subset of one. A mentor verifies by triggering a fresh representative task, timing it under 60 seconds, and confirming trace cost under $0.10 for the whole run.
+Example: a full ticket triage plus posted reply completes in 45 seconds at $0.06, demonstrated live on a fresh ticket with the mentor holding the stopwatch.
+Management UI
+1x · max 4
+L5 tested live: non-eng volunteer onboards a new role unassisted
+CLI or code only
+There is no interface beyond a terminal and the codebase. Any change to what the agents do requires editing code or config and redeploying. A mentor verifies by asking the team to change one small behavior and watching whether an editor gets opened.
+Example: changing the support agent's tone from formal to friendly means editing a Python prompt file, committing, and redeploying; there is no other way in.
+Basic web UI, dev-only
+There is a thin web layer, typically read-only views of runs or raw config forms, but real operation still assumes developer knowledge and often falls back to code. A mentor verifies by asking a non-developer teammate to make one change through the UI alone.
+Example: a bare dashboard lists the hiring crew's runs and shows raw JSON config, but adding a new screening question still means editing a file in the repo.
+Functional UI, a PM could operate with docs
+Core operations, pausing agents, editing prompts, reviewing outputs, are all doable from the UI by a non-developer who has the documentation beside them. A mentor verifies by handing the docs to a PM-profile teammate and watching them complete a real operation unaided by engineers.
+Example: following the README, a PM pauses the marketing crew, edits the campaign brief prompt in the dashboard, and re-runs the failed publish step without touching code.
+Clean UI, non-eng operates with one walkthrough
+The interface is self-explanatory enough that one guided walkthrough is all a non-engineer needs to run day-to-day operations alone. A mentor verifies by asking when the operator was trained and watching them perform a real management action live, with no engineer prompting.
+Example: after a single 5-minute walkthrough, the ops lead reassigns tickets between support agents and tightens the refund-approval guardrail on her own during judging.
+Delightful UI, non-eng volunteer onboards a new agent role (defines job, tools, guardrails) in under 10 min unassisted
+The bar is tested live during judging: a non-engineering volunteer, with no help, defines a brand new agent role, its job, tools, and guardrails, in under 10 minutes, and the role works. A mentor verifies by running that exact test with a volunteer the team did not choose.
+Example: during judging, a volunteer from another team creates a refunds specialist role, picks its tools, sets a spend guardrail, and watches it handle its first real ticket, all inside 10 minutes with the builders silent.
+AI as Agency total
+80 + 20 + 28 + 20 + 8 + 4 + 4 = 164 base points. Real output overflow on top, uncapped.
+
+Observability is tool-agnostic
+Langfuse, Braintrust, OTel, a homebrewed dashboard over Postgres: all score the same at every L-tier. The question is not "what tool" but "what can we see about the system, and what can the team do with what they see?"
+
+Power-ups on this track.
+Do the integration, earn the points: +25 per partner, no cap, all six = +150. Real use only, a mentor has to see it working in your build.
+
+Power-up	Points	Counts when	Evidence
+Wispr Flow
+25 points
+500+ words dictated during the event.
+Wispr stats screenshot.
+ElevenLabs
+25 points
+Voice does real work in the product, not a dead snippet.
+Live demo of the interaction.
+Convex
+25 points
+Convex stores real product state or is the main backend.
+Repo + Convex dashboard.
+Linkup
+25 points
+Live search doing real work in the product.
+Code + live query.
+Dodo Payments
+25 points
+Live checkout in the product (an activated account alone earns nothing).
+Dodo dashboard + live checkout.
+Cloudflare
+25 points
+Hosting, Workers, or any CF product doing real work.
+Live URL + CF dashboard.
+The edges
+Cross-track bonus.
+You pick one track, but wins outside it still pay. Say you build an AI as Agency product and your launch takes off on social: those impressions and signups earn you bonus points too, at half the weight they carry in their home track, capped at 50 total. Same proof required. And nothing is paid twice: if your own track already scores a parameter, there is no bonus on it.
+
+Source track	Parameter	Original weight	Bonus weight	Max bonus
+Virality
+Signups
+25x
+12.5x
+50
+Virality
+Visitors
+10x
+5x
+20
+Virality
+Reactions + comments
+2x
+1x
+4
+Revenue
+Signups
+20x
+10x
+40
+Revenue
+Live product quality
+8x
+4x
+16
+Revenue
+Revenue generated
+12x
+6x
+24
+AI as Agency
+Real output shipping
+20x
+10x
+40
+AI as Agency
+Observability
+7x
+3.5x
+14
+
+Copy brief
+×
+
+←
+Previous
+Rules
+Use ← → arrows or tap
+
+Next
+Setup
+→

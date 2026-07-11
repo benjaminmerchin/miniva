@@ -1,0 +1,33 @@
+03 / Rules
+Rules.
+Eight rules. Most of them are common sense. The ones that are not are the ones that decide whether your score counts, so read them once before you write a line of code.
+
+The rules.
+#	Rule
+01	Solo or team, your call. Build alone or bring a team. There is no cap on team size. Everyone on the team must be registered and on the floor.
+02	Pick one track. Virality, Revenue, or AI as Agency. You choose at registration, and that track's rubric is the only way you earn points. Wins outside your track earn bonus points, but your primary rubric is locked.
+03	Use Hermes, one of two ways. Either Hermes is your coding partner and it built your product (keep your session receipts), or Hermes is the base harness your end users interact with (show at least one capability doing real work). Either qualifies. Both is allowed. No Hermes, no score.
+04	Build on-site. The 8-hour sprint happens on the floor. Mentors are walking around watching builds all day, and what they see is part of how your numbers get trusted. No remote teammates, no code shipped in from outside.
+05	Fresh builds only. No pre-existing products, and not your company's product. Ideas, sketches, and standard scaffolding are fine. A finished thing you touched up this morning is not. The section below draws the line precisely.
+06	Submit in the window. The submission window opens after the build sprint ends. Late submissions are not considered, whatever the reason. Do not leave your submission to the last five minutes.
+07	Numbers get verified. Signups are checked live in your database, traffic is cross-checked against signups, customers get called, and signup emails get checked for bounces. A spoofed number zeroes that parameter.
+08	Judges' decision is final. Scores, tie-breakers, and eligibility calls all land with the judging panel. There is no appeals process.
+What counts as a valid starting point.
+Rule 05 is where most questions land, so here is the line. The test is simple: was the product built today, on this floor?
+
+Qualifies
+Starting from zero today. The cleanest case.
+A starter template or boilerplate you extend substantially during the sprint.
+An idea you sketched or wireframed before, but never built or deployed.
+Standard scaffolding: Next.js, Vite, FastAPI, create-anything starters.
+Backend-as-a-service: Supabase, Firebase, Convex, Clerk. Wiring up infra is not pre-building.
+LLM SDKs, APIs, and AI coding assistants doing the heavy lifting. That is the point of the event.
+Does not
+A finished product with cosmetic changes made today.
+A fork of your own or someone else's project where today's work is superficial.
+Your company's existing product, in any wrapper.
+Remote contributors or code written off the floor during the sprint.
+Something you already demoed elsewhere in its current form.
+A build that uses Hermes in neither of the two qualifying ways.
+If it's borderline, flag it.
+Unsure whether your starting point qualifies? Submit anyway and flag it in your submission. Mentors verify borderline cases before the lineup is locked, and an honest flag almost always survives the check. Hiding the origin of your build does not: getting caught is an auto-disqualification.
