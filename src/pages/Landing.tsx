@@ -62,17 +62,17 @@ function Hero() {
         </div>
 
         <h1 className="text-[46px] font-semibold leading-[1.08] tracking-[-0.02em]">
-          Your Discord already has
+          Pick your assistants.
           <br />
-          a support team.
+          We build the Discord.
           <br />
-          <span className="text-muted">It's just made of people.</span>
+          <span className="text-muted">Invite your family.</span>
         </h1>
 
         <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-muted">
-          Miniva gives a Discord server an ops crew that actually works: a manager
-          agent that plans and delegates, specialists that answer, refund, moderate
-          and speak — and a trace of every decision they made, down to the token.
+          Choose the assistants you want — trip organizer, accountant, tax — and
+          Miniva spins up a private Discord server with them already inside, ready
+          to answer. No bot setup, no server admin. Just add the people you trust.
         </p>
 
         <div className="mt-7 flex items-center gap-3">
@@ -80,7 +80,7 @@ function Hero() {
         </div>
 
         <p className="mt-3 text-[12px] text-faint">
-          Connect a server, define a role, watch it work. No code.
+          Pick assistants → we create your Discord → invite your people. No code.
         </p>
       </motion.div>
     </section>
@@ -160,12 +160,12 @@ function Proof() {
         <BorderBeam size={220} duration={9} colorFrom="#5865f2" colorTo="#3dd68c" />
 
         <div className="mb-1 flex items-baseline justify-between">
-          <h2 className="text-[14px] font-medium">One message in. A crew handles it.</h2>
+          <h2 className="text-[14px] font-medium">Ask in your server. The right assistant answers.</h2>
           <span className="tnum text-[11px] text-faint">avg 8.2s · $0.015 / task</span>
         </div>
         <p className="mb-2 max-w-lg text-[12px] leading-relaxed text-faint">
           The manager reads what came in, decides what it needs, and hands it to the
-          right specialist. Nothing is hardcoded — it plans against the actual request.
+          right assistant. Nothing is hardcoded — it plans against the actual request.
         </p>
 
         <AgentOrg />
@@ -177,23 +177,23 @@ function Proof() {
 const FEATURES = [
   {
     icon: <GitBranch size={16} />,
-    title: "Define a role in 10 minutes",
-    body: "Name it, write the job, tick the tools, set the spend limit. Hermes picks it up on the next message. Nobody opens an editor.",
+    title: "Pick assistants, get a server",
+    body: "Trip organizer, accountant, tax — hire the ones you want and Miniva creates the Discord server with them already inside. No bot tokens, no admin panel.",
   },
   {
     icon: <Activity size={16} />,
-    title: "Every decision, traced",
-    body: "The full call tree — who delegated to whom, what each agent read, what it cost. Diff two runs side by side and see exactly where they diverged.",
+    title: "Every answer, traced",
+    body: "See what each assistant searched, what it read, and what it cost — down to the token. If an answer looks off, open the trace and see exactly how it got there.",
   },
   {
     icon: <ShieldCheck size={16} />,
     title: "Guardrails, not vibes",
-    body: "Spend caps, allowed channels, and the line where an agent must stop and hand it to a human — with the full context, not a restart.",
+    body: "Spend caps and hard lines. The tax assistant searches current rules instead of guessing, and hands anything personal to a human instead of bluffing.",
   },
   {
     icon: <Gauge size={16} />,
-    title: "Failures become tests",
-    body: "Every run that fails or escalates is captured as an eval case automatically. Your test set grows from production, not from memory.",
+    title: "One subscription, whole family",
+    body: "€29/month for the server, every assistant, and everyone you invite. Add your family and they just talk to the assistants like any other member.",
   },
 ];
 
