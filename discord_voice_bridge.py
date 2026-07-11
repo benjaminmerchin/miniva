@@ -406,7 +406,12 @@ def allowed_text_channel(message):
 
 def should_handle_text_message(message):
     content = (message.content or "").strip()
-    if not content or content.startswith("!"):
+    if not content:
+        return False
+    # Allow the calendar command even though it starts with "!"
+    if content.lower().startswith("!calendar"):
+        return True
+    if content.startswith("!"):
         return False
     if not allowed_text_channel(message):
         return False
@@ -424,7 +429,38 @@ async def process_discord_text_message(message):
         return
 
     prompt = strip_own_mention(message.content)
-    if not prompt:
+    
+    if message.attachments:
+        attachment_urls = [att.url for att in message.attachments]
+        prompt += "\n\nAttachments: " + ", ".join(attachment_urls)
+
+    if not prompt.strip():
+        return
+
+    # Calendar natural-language shortcuts: handle locally so the user gets an
+    # immediate link / agenda without involving the LLM router.
+    lowered = prompt.lower()
+    if any(
+        kw in lowered
+        for kw in (
+            "connect to my calendar",
+            "connect my calendar",
+            "link my calendar",
+            "what's on my calendar",
+            "what is on my calendar",
+            "show my calendar",
+            "my agenda",
+            "mon calendrier",
+            "mon agenda",
+        )
+    ):
+        discord_user_id = str(message.author.id)
+        if any(k in lowered for k in ("connect", "link", "lier", "connecte")):
+            await _calendar_connect(message.channel, discord_user_id)
+        elif any(k in lowered for k in ("what", "show", "agenda", "calendrier")):
+            await _calendar_events(message.channel, discord_user_id)
+        else:
+            await _calendar_status(message.channel, discord_user_id)
         return
 
     author_id = str(message.author.id)
@@ -523,6 +559,148 @@ async def stop(ctx):
         vc.stop_recording()
     is_recording[ctx.guild.id] = False
     await ctx.send("Processing your voice...")
+
+
+# ---------------------------------------------------------------------------
+# Calendar connection (Google Calendar OAuth, per Discord user)
+# ---------------------------------------------------------------------------
+async def _calendar_connect(ctx_or_channel, discord_user_id: str, ephemeral: bool = False):
+    """Generate a Google consent link for ``discord_user_id`` and deliver it."""
+    import urllib.request
+    import json as _json
+
+    api_base = os.getenv("CALENDAR_API_BASE", "http://127.0.0.1:8080").rstrip("/")
+    url = f"{api_base}/calendar/connect"
+    req = urllib.request.Request(
+        url,
+        data=_json.dumps({"discord_user_id": str(discord_user_id)}).encode(),
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            data = _json.loads(resp.read().decode())
+    except Exception as exc:
+        return await ctx_or_channel.send(
+            f"⚠️ Impossible de démarrer la connexion calendrier : {exc}"
+        )
+
+    if not data.get("ok"):
+        return await ctx_or_channel.send("⚠️ Échec de la connexion calendrier.")
+
+    link = data["auth_url"]
+    msg = (
+        "📅 **Connexion Google Calendar**\n"
+        "Clique sur ce lien dans ton navigateur pour autoriser l'accès :\n"
+        f"{link}\n\n"
+        "Une fois validé, reviens ici — dis-moi « what's on my calendar » "
+        "pour tester."
+    )
+    # Prefer a DM so the consent link stays private.
+    try:
+        user = ctx_or_channel.author if hasattr(ctx_or_channel, "author") else None
+        if user is not None:
+            await user.send(msg)
+            if not ephemeral:
+                await ctx_or_channel.send(
+                    "🔒 J'ai envoyé le lien de connexion en MP pour garder ça privé."
+                )
+            return
+    except Exception:
+        pass
+    await ctx_or_channel.send(msg)
+
+
+async def _calendar_status(ctx_or_channel, discord_user_id: str):
+    import urllib.request
+    import json as _json
+
+    api_base = os.getenv("CALENDAR_API_BASE", "http://127.0.0.1:8080").rstrip("/")
+    url = f"{api_base}/calendar/status?discord_user_id={discord_user_id}"
+    try:
+        with urllib.request.urlopen(url, timeout=15) as resp:
+            data = _json.loads(resp.read().decode())
+    except Exception as exc:
+        return await ctx_or_channel.send(f"⚠️ Erreur statut calendrier : {exc}")
+    if data.get("connected"):
+        return await ctx_or_channel.send("✅ Ton Google Calendar est connecté.")
+    return await ctx_or_channel.send(
+        "❌ Ton Google Calendar n'est pas connecté. Lance `!calendar` pour le lier."
+    )
+
+
+async def _calendar_events(ctx_or_channel, discord_user_id: str):
+    import urllib.request
+    import json as _json
+    from datetime import datetime
+
+    api_base = os.getenv("CALENDAR_API_BASE", "http://127.0.0.1:8080").rstrip("/")
+    url = f"{api_base}/calendar/events"
+    req = urllib.request.Request(
+        url,
+        data=_json.dumps({"discord_user_id": str(discord_user_id)}).encode(),
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=20) as resp:
+            data = _json.loads(resp.read().decode())
+    except urllib.error.HTTPError as exc:
+        if exc.code == 401:
+            return await ctx_or_channel.send(
+                "❌ Calendrier non connecté. Lance `!calendar` d'abord."
+            )
+        return await ctx_or_channel.send(f"⚠️ Erreur calendrier : {exc}")
+    except Exception as exc:
+        return await ctx_or_channel.send(f"⚠️ Erreur calendrier : {exc}")
+
+    events = data.get("events", [])
+    if not events:
+        return await ctx_or_channel.send("📭 Aucun événement à venir (14 prochains jours).")
+    lines = ["📅 **Ton agenda (14 prochains jours)**"]
+    for ev in events:
+        start = ev.get("start") or ""
+        if start:
+            try:
+                dt = datetime.fromisoformat(start.replace("Z", "+00:00"))
+                start = dt.strftime("%a %d/%m %H:%M")
+            except Exception:
+                pass
+        lines.append(f"• **{ev.get('summary', '(sans titre)')}** — {start}")
+    await ctx_or_channel.send("\n".join(lines))
+
+
+@bot.command()
+async def calendar(ctx, action: str = "connect"):
+    """Google Calendar: !calendar [connect|status|events|disconnect]."""
+    discord_user_id = str(ctx.author.id)
+    action = (action or "connect").lower()
+    if action in ("connect", "link", "auth"):
+        await _calendar_connect(ctx, discord_user_id)
+    elif action in ("status", "check"):
+        await _calendar_status(ctx, discord_user_id)
+    elif action in ("events", "agenda", "show"):
+        await _calendar_events(ctx, discord_user_id)
+    elif action in ("disconnect", "unlink"):
+        import urllib.request
+        import json as _json
+        api_base = os.getenv("CALENDAR_API_BASE", "http://127.0.0.1:8080").rstrip("/")
+        url = f"{api_base}/calendar/disconnect"
+        req = urllib.request.Request(
+            url,
+            data=_json.dumps({"discord_user_id": discord_user_id}).encode(),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        try:
+            urllib.request.urlopen(req, timeout=15).read()
+            await ctx.send("🔌 Calendrier déconnecté.")
+        except Exception as exc:
+            await ctx.send(f"⚠️ Échec déconnexion : {exc}")
+    else:
+        await ctx.send(
+            "Usage : `!calendar [connect|status|events|disconnect]`"
+        )
 
 def play_audio(vc, audio_bytes):
     """Plays audio bytes in the voice channel."""

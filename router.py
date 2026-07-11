@@ -33,6 +33,11 @@ AGENT_ALIASES = {
     "grogro": "Grogro",
     "grocery": "Grogro",
     "groceries": "Grogro",
+    "d": "Domo",
+    "domo": "Domo",
+    "domotique": "Domo",
+    "home": "Domo",
+    "maison": "Domo",
     "debug": "DEBUG",
     "general": "General",
 }
@@ -122,6 +127,20 @@ def _keyword_fallback(message_text: str) -> str:
         )
     ):
         return "Grogro"
+    if any(
+        word in text
+        for word in (
+            "google home",
+            "domotique",
+            "lumière",
+            "lumiere",
+            "maison",
+            "thermostat",
+            "volet",
+            "salon",
+        )
+    ):
+        return "Domo"
     return "General"
 
 
@@ -155,6 +174,7 @@ def detect_target_agent(message_text: str) -> str:
         "- Tripo : for messages about trips, travel, flights, hotels, vacation.\n"
         "- Taxy : for messages about taxes, impôts, VAT, deductions, finances.\n"
         "- Grogro : for messages about groceries, food, courses, shopping, meals.\n"
+        "- Domo : for messages about home automation, domotique, google home, lights, thermostats.\n"
         "- DEBUG : for messages containing 'DEBUG' or asking for debugging.\n"
         "- General : for general chat, greetings, or anything else.\n"
         "Do not output anything else. Only the exact word."

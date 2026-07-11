@@ -224,4 +224,36 @@ export default defineSchema({
     activated: v.boolean(), // true once they connected a real guild
     createdAt: v.number(),
   }).index("by_email", ["email"]),
+
+  // Invoices — tracked for user fiscal tax purposes.
+  invoices: defineTable({
+    serverId: v.id("servers"), // Which server's bot processed this
+    discordUserId: v.string(), // The user who sent the invoice
+    amountHT: v.optional(v.number()),
+    amountTTC: v.optional(v.number()),
+    tva: v.optional(v.number()),
+    date: v.optional(v.string()),
+    vendor: v.optional(v.string()),
+    category: v.optional(v.string()),
+    receiptUrl: v.optional(v.string()),
+    status: v.union(v.literal("pending"), v.literal("processed")),
+    rawText: v.optional(v.string()),
+    createdAt: v.number(),
+  })
+    .index("by_server", ["serverId"])
+    .index("by_discord_user", ["discordUserId"])
+    .index("by_server_discord_user", ["serverId", "discordUserId"]),
+
+  // Groceries — shopping lists managed by Grogro.
+  groceries: defineTable({
+    serverId: v.id("servers"), // Which server's bot processed this
+    discordUserId: v.string(), // The user who added the item
+    item: v.string(),
+    quantity: v.optional(v.number()),
+    status: v.union(v.literal("pending"), v.literal("bought")),
+    createdAt: v.number(),
+  })
+    .index("by_server", ["serverId"])
+    .index("by_discord_user", ["discordUserId"])
+    .index("by_server_status", ["serverId", "status"]),
 });

@@ -15,6 +15,8 @@ import Alerts from "./pages/Alerts";
 import Billing from "./pages/Billing";
 import HermesLive from "./pages/HermesLive";
 import Setup from "./pages/Setup";
+import { Invoices } from "./pages/Invoices";
+import { Grogro } from "./pages/Grogro";
 
 export default function App() {
   return (
@@ -83,6 +85,8 @@ function Shell() {
           <Nav to="/app/evals" label="Evals" />
           <Nav to="/app/alerts" label="Alerts" badge={openAlerts} />
           <Nav to="/app/hermes" label="Hermes live" />
+          <Nav to="/app/invoices" label="Factures" />
+          <Nav to="/app/grogro" label="Courses" />
           <Nav to="/app/billing" label="Billing" />
         </nav>
 
@@ -124,6 +128,8 @@ function Shell() {
           <Route path="evals" element={<Evals serverId={server._id} />} />
           <Route path="alerts" element={<Alerts serverId={server._id} />} />
           <Route path="hermes" element={<HermesLive />} />
+          <Route path="invoices" element={<Invoices />} />
+          <Route path="grogro" element={<Grogro />} />
           <Route path="billing" element={<Billing serverId={server._id} />} />
         </Routes>
       </main>

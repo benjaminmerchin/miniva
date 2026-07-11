@@ -162,7 +162,35 @@ http.route({
   }),
 });
 
-for (const path of ["/v1/config", "/v1/runs", "/v1/steps", "/v1/runs/complete", "/v1/provisioned"]) {
+/** POST /v1/invoices — the bot submits extracted invoice data. */
+http.route({
+  path: "/v1/invoices",
+  method: "POST",
+  handler: httpAction(async (ctx, req) => {
+    const server = await authed(ctx, req);
+    if (!server) return json({ error: "bad ingest key" }, 401);
+
+    const b = await req.json();
+    if (!b.discordUserId) return json({ error: "discordUserId is required" }, 400);
+
+    const id = await ctx.runMutation(internal.invoices.saveInvoice, {
+      serverId: server._id,
+      discordUserId: b.discordUserId,
+      amountHT: b.amountHT,
+      amountTTC: b.amountTTC,
+      tva: b.tva,
+      date: b.date,
+      vendor: b.vendor,
+      category: b.category,
+      receiptUrl: b.receiptUrl,
+      status: b.status || "processed",
+      rawText: b.rawText,
+    });
+    return json({ ok: true, id });
+  }),
+});
+
+for (const path of ["/v1/config", "/v1/runs", "/v1/steps", "/v1/runs/complete", "/v1/provisioned", "/v1/invoices"]) {
   http.route({
     path,
     method: "OPTIONS",

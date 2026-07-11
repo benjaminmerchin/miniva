@@ -39,6 +39,8 @@ def run_subagent(
     cmd = ["hermes"]
     if agent.lower() in {"taxy", "trippy"}:
         cmd += ["-s", "trippy-tax"]
+    elif agent.lower() in {"domo", "domotique"}:
+        cmd += ["-s", "domotique-home"]
     cmd += ["-z", f"[{agent}] {task} {cascade_instruction}"]
     effective_workdir = workdir or os.getenv("HERMES_WORKDIR") or None
     try:

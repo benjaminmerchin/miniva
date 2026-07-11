@@ -17,6 +17,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from master_controller import run_subagent
+from calendar_auth import SCOPES as SCOPES_CALENDAR
 from voice_core import (
     AuthError,
     ConflictError,
@@ -326,4 +327,148 @@ def observability_stats() -> dict:
         "total_cost": 0.000,
         "uptime_minutes": random.randint(10, 300)
     }
+
+
+# ---------------------------------------------------------------------------
+# Google Calendar OAuth (per-Discord-user)
+# ---------------------------------------------------------------------------
+class CalendarConnect(BaseModel):
+    discord_user_id: str
+
+
+class CalendarEventsQuery(BaseModel):
+    discord_user_id: str
+    max_results: int = 10
+    days_ahead: int = 14
+
+
+class CalendarEventCreate(BaseModel):
+    discord_user_id: str
+    summary: str
+    start: str  # ISO 8601
+    end: str | None = None  # ISO 8601
+    description: str | None = None
+    location: str | None = None
+
+
+@app.post("/calendar/connect")
+def calendar_connect(payload: CalendarConnect) -> dict:
+    """Return a Google consent URL for the given Discord user."""
+    from calendar_auth import create_authorization_url
+
+    try:
+        url = create_authorization_url(payload.discord_user_id)
+    except RuntimeError as exc:
+        raise HTTPException(
+            status_code=503,
+            detail=f"Configuration Google manquante: {exc}",
+        ) from exc
+    return {
+        "ok": True,
+        "auth_url": url,
+        "message": (
+            "Ouvre ce lien dans ton navigateur pour autoriser l'accès à ton "
+            "Google Calendar, puis reviens ici. Le lien reste valable quelques minutes."
+        ),
+    }
+
+
+@app.get("/calendar/oauth2callback")
+def calendar_oauth2callback(code: str = "", state: str = "") -> dict:
+    """Google redirects here after consent. Exchanges code, stores tokens."""
+    from calendar_auth import consume_state, save_tokens
+    from google_auth_oauthlib.flow import Flow
+
+    if not code or not state:
+        raise HTTPException(
+            status_code=400,
+            detail="Parametres manquants (code/state) dans le callback.",
+        )
+
+    discord_user_id = consume_state(state)
+    if not discord_user_id:
+        raise HTTPException(
+            status_code=400,
+            detail="State inconnu ou expire. Relance la connexion avec !calendar.",
+        )
+
+    from calendar_auth import _client_config, redirect_uri
+
+    flow = Flow.from_client_config(_client_config(), scopes=SCOPES_CALENDAR)
+    flow.redirect_uri = redirect_uri()
+    flow.fetch_token(code=code)
+
+    save_tokens(discord_user_id, flow.credentials)
+    return {
+        "ok": True,
+        "discord_user_id": discord_user_id,
+        "message": "✅ Calendrier Google connecte ! Tu peux fermer cet onglet et revenir sur Discord.",
+    }
+
+
+@app.get("/calendar/status")
+def calendar_status(discord_user_id: str = "") -> dict:
+    from calendar_auth import is_connected
+
+    if not discord_user_id:
+        raise HTTPException(status_code=400, detail="discord_user_id requis.")
+    return {"discord_user_id": discord_user_id, "connected": is_connected(discord_user_id)}
+
+
+@app.post("/calendar/events")
+def calendar_events(payload: CalendarEventsQuery) -> dict:
+    from calendar_auth import is_connected
+    from calendar_client import list_upcoming_events
+
+    if not is_connected(payload.discord_user_id):
+        raise HTTPException(
+            status_code=401,
+            detail="Calendrier non connecte. Utilise !calendar pour le lier.",
+        )
+    events = list_upcoming_events(
+        payload.discord_user_id,
+        max_results=payload.max_results,
+        days_ahead=payload.days_ahead,
+    )
+    return {"discord_user_id": payload.discord_user_id, "events": events}
+
+
+@app.post("/calendar/events/create")
+def calendar_event_create(payload: CalendarEventCreate) -> dict:
+    from calendar_auth import is_connected
+    from calendar_client import create_event
+    from datetime import datetime
+
+    if not is_connected(payload.discord_user_id):
+        raise HTTPException(
+            status_code=401,
+            detail="Calendrier non connecte. Utilise !calendar pour le lier.",
+        )
+    try:
+        start_dt = datetime.fromisoformat(payload.start.replace("Z", "+00:00"))
+        end_dt = (
+            datetime.fromisoformat(payload.end.replace("Z", "+00:00"))
+            if payload.end
+            else None
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=f"Date invalide: {exc}")
+
+    created = create_event(
+        payload.discord_user_id,
+        summary=payload.summary,
+        start_dt=start_dt,
+        end_dt=end_dt,
+        description=payload.description,
+        location=payload.location,
+    )
+    return {"ok": True, "event": created}
+
+
+@app.post("/calendar/disconnect")
+def calendar_disconnect(payload: CalendarConnect) -> dict:
+    from calendar_auth import disconnect
+
+    ok = disconnect(payload.discord_user_id)
+    return {"ok": ok, "disconnected": ok}
 
