@@ -159,3 +159,103 @@ export const toolCatalog = query({
   args: {},
   handler: async () => TOOL_CATALOG,
 });
+
+/**
+ * Roles you can hire in one click. Each one is a complete definition — job,
+ * tools, guardrails — so a non-engineer gets a working agent without writing a
+ * prompt. They're a starting point: everything stays editable afterwards.
+ */
+export const AGENT_LIBRARY = [
+  {
+    slug: "trip-organizer",
+    name: "Trip Organizer",
+    blurb: "Plans the trip, prices it, and keeps the thread up to date.",
+    role: "specialist" as const,
+    job: "Plan trips end to end. Search live for flights, trains and stays, compare them on price and travel time, and come back with two or three concrete options — never a vague list. Say what each one costs and why you'd pick it. If dates or budget are missing, ask once, then plan.",
+    tools: ["linkup.search", "discord.reply", "discord.thread"],
+    guardrails: {
+      maxCostUsd: 0.4,
+      maxSteps: 20,
+      requiresHumanApproval: false,
+      allowedChannelIds: [],
+    },
+  },
+  {
+    slug: "accountant",
+    name: "Accountant",
+    blurb: "Categorises spend, tracks the burn, answers what things cost.",
+    role: "specialist" as const,
+    job: "Keep the books legible. Categorise expenses as they come in, flag anything that looks duplicated or out of pattern, and answer questions about what has been spent and where. Give numbers, not adjectives. When a figure depends on an assumption, say which.",
+    tools: ["linkup.search", "discord.reply"],
+    guardrails: {
+      maxCostUsd: 0.3,
+      maxSteps: 15,
+      requiresHumanApproval: false,
+      allowedChannelIds: [],
+    },
+  },
+  {
+    slug: "tax",
+    name: "Tax",
+    blurb: "Answers tax questions with the current rules, and knows when to stop.",
+    role: "specialist" as const,
+    job: "Answer tax questions using the rules that are actually in force this year — always search for the current figures rather than trusting memory, because thresholds move. Quote the source. You are not a licensed advisor: for anything that turns on someone's personal situation, or where being wrong is expensive, say so plainly and escalate to a human instead of guessing.",
+    tools: ["linkup.search", "discord.reply", "miniva.escalate"],
+    guardrails: {
+      maxCostUsd: 0.5,
+      maxSteps: 20,
+      requiresHumanApproval: false,
+      allowedChannelIds: [],
+    },
+  },
+] as const;
+
+export const library = query({
+  args: {},
+  handler: async () => AGENT_LIBRARY,
+});
+
+/** Hire a role from the library. Idempotent on the name. */
+export const hire = mutation({
+  args: { serverId: v.id("servers"), slug: v.string() },
+  handler: async (ctx, { serverId, slug }) => {
+    const preset = AGENT_LIBRARY.find((a) => a.slug === slug);
+    if (!preset) throw new Error(`No such role: ${slug}`);
+
+    const key = slugify(preset.name);
+    const existing = await ctx.db
+      .query("agents")
+      .withIndex("by_server_key", (q) => q.eq("serverId", serverId).eq("key", key))
+      .unique();
+    if (existing) return existing._id;
+
+    const now = Date.now();
+    const agentId = await ctx.db.insert("agents", {
+      serverId,
+      key,
+      name: preset.name,
+      role: preset.role,
+      job: preset.job,
+      tools: [...preset.tools],
+      guardrails: { ...preset.guardrails, allowedChannelIds: [] },
+      model: "gpt-5.5",
+      version: 1,
+      enabled: true,
+      createdAt: now,
+      updatedAt: now,
+    });
+
+    await ctx.db.insert("agentVersions", {
+      agentId,
+      serverId,
+      version: 1,
+      job: preset.job,
+      tools: [...preset.tools],
+      guardrails: { ...preset.guardrails, allowedChannelIds: [] },
+      model: "gpt-5.5",
+      createdAt: now,
+    });
+
+    return agentId;
+  },
+});

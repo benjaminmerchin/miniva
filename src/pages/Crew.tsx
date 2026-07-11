@@ -17,6 +17,7 @@ export default function Crew({ serverId }: { serverId: Id<"servers"> }) {
 
   const manager = agents?.find((a) => a.role === "manager");
   const specialists = agents?.filter((a) => a.role === "specialist") ?? [];
+  const hiredKeys = new Set(agents?.map((a) => a.key) ?? []);
 
   return (
     <div className="px-8 py-7">
@@ -57,6 +58,8 @@ export default function Crew({ serverId }: { serverId: Id<"servers"> }) {
         </div>
       </section>
 
+      <Library serverId={serverId} hired={hiredKeys} />
+
       <AnimatePresence>
         {editing && (
           <RoleEditor
@@ -67,6 +70,76 @@ export default function Crew({ serverId }: { serverId: Id<"servers"> }) {
         )}
       </AnimatePresence>
     </div>
+  );
+}
+
+/**
+ * Hiring, not configuring. Each card is a complete role — job, tools,
+ * guardrails — so someone who has never written a prompt still ends up with an
+ * agent that works. Everything stays editable after.
+ */
+function Library({
+  serverId,
+  hired,
+}: {
+  serverId: Id<"servers">;
+  hired: Set<string>;
+}) {
+  const roles = useQuery(api.agents.library) ?? [];
+  const hire = useMutation(api.agents.hire);
+  const [busy, setBusy] = useState<string | null>(null);
+
+  return (
+    <section className="mt-9">
+      <h2 className="mb-1 text-[13px] font-medium text-muted">Hire from the library</h2>
+      <p className="mb-3 text-[12px] text-faint">
+        A complete role in one click. Edit it afterwards like any other.
+      </p>
+
+      <div className="grid grid-cols-3 gap-3">
+        {roles.map((r) => {
+          const already = hired.has(r.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"));
+          return (
+            <div
+              key={r.slug}
+              className="flex flex-col rounded-xl border border-line bg-panel p-4"
+            >
+              <span className="text-[14px] font-medium">{r.name}</span>
+              <p className="mt-1 flex-1 text-[12px] leading-relaxed text-muted">
+                {r.blurb}
+              </p>
+
+              <div className="mt-3 flex flex-wrap gap-1">
+                {r.tools.map((t) => (
+                  <span
+                    key={t}
+                    className="rounded border border-line-soft px-1.5 py-0.5 text-[10px] text-faint"
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+
+              <button
+                disabled={already || busy === r.slug}
+                onClick={async () => {
+                  setBusy(r.slug);
+                  await hire({ serverId, slug: r.slug });
+                  setBusy(null);
+                }}
+                className={`mt-3.5 rounded-lg py-2 text-[12px] font-medium transition-colors ${
+                  already
+                    ? "cursor-default border border-line-soft text-faint"
+                    : "bg-blurple text-white hover:bg-blurple-soft disabled:opacity-60"
+                }`}
+              >
+                {already ? "Hired" : busy === r.slug ? "Hiring…" : "Hire"}
+              </button>
+            </div>
+          );
+        })}
+      </div>
+    </section>
   );
 }
 
