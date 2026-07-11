@@ -30,6 +30,10 @@ const activeSpeakers = new Set<string>();
 const player = createAudioPlayer();
 let agentVersions: { key: string; version: number }[] = [];
 
+// Discord.js can leave no ref'ed handles in text-only smoke mode after READY.
+// Keep the process alive so the messageCreate handler remains active.
+setInterval(() => undefined, 60_000);
+
 client.once("ready", async () => {
   if (!client.user) throw new Error("Discord client has no user after ready");
 
