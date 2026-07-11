@@ -17,7 +17,10 @@
  */
 interface Env {
   ASSETS: { fetch: (req: Request) => Promise<Response> };
-  INVOICES: {
+  // Optional: the account hasn't enabled R2 yet (API code 10042), and a
+  // declared-but-missing binding blocks every deploy. The invoice endpoints
+  // answer 503 until the binding is restored in wrangler.jsonc.
+  INVOICES?: {
     put: (
       key: string,
       value: ArrayBuffer,
@@ -55,6 +58,13 @@ export default {
       return Response.redirect(url.toString(), 301);
     }
 
+    if (url.pathname.startsWith("/invoices/img") && !env.INVOICES) {
+      return Response.json(
+        { error: "invoice storage offline: R2 not enabled on the account yet" },
+        { status: 503 },
+      );
+    }
+
     if (url.pathname === "/invoices/img" && request.method === "POST") {
       const auth = request.headers.get("Authorization") ?? "";
       const check = await fetch(`${CONVEX_SITE}/v1/config`, {
@@ -79,7 +89,7 @@ export default {
       }
 
       const photoKey = `inv/${crypto.randomUUID()}.${ext}`;
-      await env.INVOICES.put(photoKey, body, {
+      await env.INVOICES!.put(photoKey, body, {
         httpMetadata: { contentType: contentType.split(";")[0].trim() },
       });
       return Response.json({
@@ -90,7 +100,7 @@ export default {
 
     if (url.pathname.startsWith("/invoices/img/") && request.method === "GET") {
       const key = decodeURIComponent(url.pathname.slice("/invoices/img/".length));
-      const object = await env.INVOICES.get(key);
+      const object = await env.INVOICES!.get(key);
       if (!object) return new Response("not found", { status: 404 });
       return new Response(object.body, {
         headers: {

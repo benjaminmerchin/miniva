@@ -12,7 +12,6 @@ import Compare from "./pages/Compare";
 import Crew from "./pages/Crew";
 import Evals from "./pages/Evals";
 import Alerts from "./pages/Alerts";
-import Invoices from "./pages/Invoices";
 import Billing from "./pages/Billing";
 import HermesLive from "./pages/HermesLive";
 import Setup from "./pages/Setup";
@@ -126,7 +125,6 @@ function Shell() {
           <Route path="runs" element={<Runs serverId={server._id} />} />
           <Route path="runs/compare" element={<Compare serverId={server._id} />} />
           <Route path="runs/:runId" element={<RunDetail />} />
-          <Route path="invoices" element={<Invoices serverId={server._id} />} />
           <Route path="crew" element={<Crew serverId={server._id} />} />
           <Route path="evals" element={<Evals serverId={server._id} />} />
           <Route path="alerts" element={<Alerts serverId={server._id} />} />
