@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import { useConvexAuth } from "convex/react";
 import { motion } from "motion/react";
 import { ArrowRight, Zap } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
@@ -17,6 +18,10 @@ import { Logo } from "../App";
 const DEMO = { email: "demo@miniva.co", password: "miniva-demo-2026" };
 
 export default function Login() {
+  // The bug this fixes: sign-in succeeded, the session was live, and the page
+  // just sat there. Watching auth state routes both fresh sign-ins and
+  // already-signed-in visitors straight to the app. No email is ever sent.
+  const { isAuthenticated } = useConvexAuth();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -54,6 +59,8 @@ export default function Login() {
       setBusy(false);
     }
   }
+
+  if (isAuthenticated) return <Navigate to="/app" replace />;
 
   return (
     <div className="relative min-h-full bg-ink">
