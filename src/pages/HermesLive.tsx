@@ -1,64 +1,41 @@
-import { ExternalLink, Activity } from "lucide-react";
-import { motion } from "motion/react";
-import { BorderBeam } from "@/components/ui/border-beam";
+import { ExternalLink } from "lucide-react";
 
 /**
- * The actual Hermes instance behind the demo Discord.
+ * The actual Hermes instance behind the demo Discord, embedded live.
  *
- * It speaks plain http on a bare IP, which a https page can neither iframe
- * (mixed content) nor proxy through the worker (Cloudflare error 1003: no
- * direct-IP fetch). Top-level navigation has no such restriction — so this
- * page is a launchpad, not an embed. If a hermes.miniva.co DNS record lands,
- * the /hermes-live worker proxy can take over and this becomes an iframe.
+ * Served through the worker's /hermes-live proxy: the instance speaks plain
+ * http on port 8787, which most networks block and https pages can't frame.
+ * The proxy puts it on https://miniva.co, port 443 — works from any device.
  */
-const SESSION_URL = "http://144.76.184.186:8787/session/fcc8b0f8507c";
+const SESSION_PATH = "/hermes-live/session/fcc8b0f8507c";
 
 export default function HermesLive() {
   return (
-    <div className="flex h-full items-center justify-center px-8">
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="relative w-full max-w-lg overflow-hidden rounded-2xl border border-line bg-panel p-7"
-      >
-        <BorderBeam size={160} duration={8} colorFrom="#5865f2" colorTo="#3dd68c" />
-
-        <div className="flex items-center gap-2.5">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-line bg-raised text-blurple-soft">
-            <Activity size={16} />
-          </span>
-          <div>
-            <h1 className="text-[16px] font-semibold tracking-tight">
-              Hermes — live session
-            </h1>
-            <div className="mt-0.5 flex items-center gap-1.5 text-[11px] text-faint">
-              <span className="live-dot h-1.5 w-1.5 rounded-full bg-good" />
-              hermes-fra-01 · running the demo Discord
-            </div>
-          </div>
+    <div className="flex h-full flex-col">
+      <div className="flex items-center justify-between border-b border-line px-8 py-4">
+        <div>
+          <h1 className="text-[16px] font-semibold tracking-tight">Hermes — live session</h1>
+          <p className="mt-0.5 text-[12px] text-muted">
+            The harness running the demo Discord's crew, in real time. This is the
+            engine; the rest of Miniva is the cockpit.
+          </p>
         </div>
-
-        <p className="mt-4 text-[13px] leading-relaxed text-muted">
-          This is the engine itself: the Hermes harness executing the crew behind
-          the demo Discord, streaming its session in real time. Miniva is the
-          cockpit — agent definitions, traces, costs, evals. This is the machine
-          they come from.
-        </p>
-
         <a
-          href={SESSION_URL}
+          href={SESSION_PATH}
           target="_blank"
           rel="noreferrer"
-          className="group mt-5 flex w-full items-center justify-center gap-2 rounded-lg bg-blurple py-2.5 text-[13px] font-medium text-white transition-colors hover:bg-blurple-soft"
+          className="flex shrink-0 items-center gap-1.5 rounded-md border border-line bg-panel px-3 py-1.5 text-[12px] text-muted transition-colors hover:text-fg"
         >
-          Open the live session
-          <ExternalLink size={14} className="transition-transform group-hover:translate-x-0.5" />
+          <ExternalLink size={12} />
+          Open full screen
         </a>
+      </div>
 
-        <p className="mt-2.5 text-center text-[11px] text-faint">
-          Opens in a new tab — the instance runs on the demo server.
-        </p>
-      </motion.div>
+      <iframe
+        src={SESSION_PATH}
+        title="Hermes live session"
+        className="w-full flex-1 border-0 bg-ink"
+      />
     </div>
   );
 }

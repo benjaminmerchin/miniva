@@ -33,6 +33,11 @@ export default {
         request,
       );
 
+      // A 101 upgrade can't be reconstructed — hand websockets back untouched.
+      if (request.headers.get("Upgrade")?.toLowerCase() === "websocket") {
+        return fetch(upstream);
+      }
+
       const res = await fetch(upstream);
 
       const headers = new Headers(res.headers);
