@@ -161,7 +161,7 @@ function Proof() {
 
         <div className="mb-1 flex items-baseline justify-between">
           <h2 className="text-[14px] font-medium">Ask in your server. The right assistant answers.</h2>
-          <span className="tnum text-[11px] text-faint">avg 8.2s · $0.015 / task</span>
+          <span className="tnum text-[11px] text-faint">every step traced</span>
         </div>
         <p className="mb-2 max-w-lg text-[12px] leading-relaxed text-faint">
           The manager reads what came in, decides what it needs, and hands it to the

@@ -74,3 +74,16 @@ export const rotateIngestKey = mutation({
     return ingestKey;
   },
 });
+
+/** One-off metadata fix: align the demo server row with the real instance. */
+export const updateMeta = mutation({
+  args: {
+    serverId: v.id("servers"),
+    name: v.string(),
+    hermesInstanceId: v.string(),
+    hermesUrl: v.string(),
+  },
+  handler: async (ctx, { serverId, ...meta }) => {
+    await ctx.db.patch(serverId, meta);
+  },
+});
