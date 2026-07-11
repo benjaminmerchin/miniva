@@ -1,0 +1,26 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "hermes-voice-agent",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-07-11",
+  "ai": {
+    "binding": "AI"
+  },
+  "vars": {
+    "VPS_API_URL": "http://127.0.0.1:8080"
+  },
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "HermesVoiceAgent",
+        "class_name": "HermesVoiceAgent"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["HermesVoiceAgent"]
+    }
+  ]
+}

@@ -1,5 +1,7 @@
-# Logs
-logs
+__pycache__/
+.pytest_cache/
+data/
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -10,7 +12,13 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+.env
+.env.*
 *.local
+temp_tts_*.mp3
+cloudflare-voice-worker/node_modules/
+cloudflare-voice-worker/.wrangler/
+cloudflare-voice-worker/dist/
 
 # Editor directories and files
 .vscode/*

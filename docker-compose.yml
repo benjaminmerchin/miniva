@@ -1,0 +1,102 @@
+x-app-build: &app-build
+  context: .
+  target: app
+  args:
+    HERMES_AGENT_REF: ${HERMES_AGENT_REF:-111544d544d6cf6efed9875e116f2daeb76a1211}
+
+x-gateway-build: &gateway-build
+  context: .
+  target: gateway
+  args:
+    HERMES_AGENT_REF: ${HERMES_AGENT_REF:-111544d544d6cf6efed9875e116f2daeb76a1211}
+
+x-frontend-build: &frontend-build
+  context: .
+  target: frontend
+  args:
+    VITE_CONVEX_URL: ${VITE_CONVEX_URL:-}
+    VITE_CONVEX_SITE_URL: ${VITE_CONVEX_SITE_URL:-}
+    VITE_SITE_URL: ${VITE_SITE_URL:-}
+    VITE_DODO_PRODUCT_ID: ${VITE_DODO_PRODUCT_ID:-}
+    VITE_DODO_MODE: ${VITE_DODO_MODE:-test}
+
+services:
+  api:
+    build: *app-build
+    container_name: hermes_api
+    restart: unless-stopped
+    env_file:
+      - ${HOME}/.hermes/.env
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ${HOME}/.hermes:/root/.hermes
+    environment:
+      PYTHONUNBUFFERED: "1"
+      VOICE_DB_PATH: /app/data/voice_api.sqlite3
+      VOICE_STORAGE_DIR: /app/data/voice_storage
+      HERMES_WORKDIR: /app
+      HERMES_VOICE_EXEC_ENABLED: ${HERMES_VOICE_EXEC_ENABLED:-true}
+      HERMES_VOICE_AGENT: ${HERMES_VOICE_AGENT:-voice}
+      OPENROUTER_MODEL: ${OPENROUTER_MODEL:-google/gemma-4-26b-a4b-it}
+    ports:
+      - "127.0.0.1:${VOICE_API_PORT:-18080}:8080"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health', timeout=2).read()"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  gateway:
+    build: *gateway-build
+    container_name: hermes_gateway
+    restart: unless-stopped
+    env_file:
+      - ${HOME}/.hermes/.env
+    volumes:
+      - ${HOME}/.hermes:/root/.hermes
+    environment:
+      PYTHONUNBUFFERED: "1"
+      HERMES_PROFILE: ${HERMES_PROFILE:-MASTER}
+
+  voice_bridge:
+    build: *app-build
+    container_name: hermes_voice_bridge
+    restart: unless-stopped
+    depends_on:
+      - gateway
+    env_file:
+      - ${HOME}/.hermes/.env
+    volumes:
+      - ./logs:/app/logs
+      - ${HOME}/.hermes:/root/.hermes
+    environment:
+      PYTHONUNBUFFERED: "1"
+      HERMES_WORKDIR: /app
+      OPENROUTER_MODEL: ${OPENROUTER_MODEL:-google/gemma-4-26b-a4b-it}
+      DISCORD_ENABLE_VOICE: ${DISCORD_ENABLE_VOICE:-1}
+    command: python discord_voice_bridge.py
+
+  frontend:
+    build: *frontend-build
+    container_name: hermes_frontend
+    restart: unless-stopped
+    expose:
+      - "80"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: hermes_nginx
+    restart: unless-stopped
+    ports:
+      - "${HTTP_PORT:-80}:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - api
+      - frontend

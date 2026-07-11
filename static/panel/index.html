@@ -1,0 +1,589 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Hermes Voice Panel</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f6f7f9;
+        --panel: #ffffff;
+        --text: #17202a;
+        --muted: #687385;
+        --line: #d9dee7;
+        --primary: #0f766e;
+        --primary-strong: #115e59;
+        --danger: #b42318;
+        --focus: #2563eb;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        font-size: 15px;
+        line-height: 1.4;
+      }
+
+      main {
+        width: min(1120px, calc(100vw - 32px));
+        margin: 28px auto;
+      }
+
+      header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 18px;
+      }
+
+      h1,
+      h2 {
+        margin: 0;
+        letter-spacing: 0;
+      }
+
+      h1 {
+        font-size: clamp(26px, 4vw, 42px);
+        font-weight: 760;
+      }
+
+      h2 {
+        font-size: 18px;
+        font-weight: 720;
+      }
+
+      .status {
+        min-height: 22px;
+        color: var(--muted);
+        text-align: right;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 360px 1fr;
+        gap: 16px;
+        align-items: start;
+      }
+
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 16px;
+      }
+
+      .stack {
+        display: grid;
+        gap: 12px;
+      }
+
+      .row {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      label {
+        display: grid;
+        gap: 6px;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 640;
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        color: var(--text);
+        background: #fff;
+        font: inherit;
+        padding: 10px 11px;
+      }
+
+      textarea {
+        min-height: 120px;
+        resize: vertical;
+      }
+
+      input:focus,
+      select:focus,
+      textarea:focus,
+      button:focus-visible {
+        outline: 2px solid var(--focus);
+        outline-offset: 2px;
+      }
+
+      button {
+        min-height: 40px;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        background: #fff;
+        color: var(--text);
+        font: inherit;
+        font-weight: 680;
+        padding: 9px 12px;
+        cursor: pointer;
+      }
+
+      button.primary {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: white;
+      }
+
+      button.primary:hover {
+        background: var(--primary-strong);
+      }
+
+      button.danger {
+        color: white;
+        background: var(--danger);
+        border-color: var(--danger);
+      }
+
+      button:disabled {
+        cursor: not-allowed;
+        opacity: 0.55;
+      }
+
+      .split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .muted {
+        color: var(--muted);
+      }
+
+      .list {
+        display: grid;
+        gap: 8px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .item {
+        display: grid;
+        gap: 2px;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        padding: 10px 11px;
+        background: #fbfcfd;
+      }
+
+      .item strong {
+        font-size: 14px;
+      }
+
+      .live-state {
+        display: inline-flex;
+        min-width: 96px;
+        justify-content: center;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 6px 10px;
+        font-size: 13px;
+        font-weight: 720;
+        color: var(--muted);
+      }
+
+      .live-state.on {
+        border-color: rgba(15, 118, 110, 0.32);
+        color: var(--primary-strong);
+        background: rgba(15, 118, 110, 0.08);
+      }
+
+      @media (max-width: 840px) {
+        main {
+          width: min(100vw - 20px, 680px);
+          margin: 16px auto;
+        }
+
+        header {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .status {
+          text-align: left;
+        }
+
+        .grid,
+        .split {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div>
+          <h1>Hermes Voice Panel</h1>
+          <div class="muted" id="userLine">Signed out</div>
+        </div>
+        <div style="text-align: right;">
+          <div class="status" id="status" style="margin-bottom: 4px;"></div>
+          <a href="/panel/observability.html" style="color: var(--primary); font-weight: 600; text-decoration: none; margin-right: 12px;">Observability</a>
+          <a href="/panel/agents.html" style="color: var(--primary); font-weight: 600; text-decoration: none;">Agents Harness →</a>
+        </div>
+      </header>
+
+      <div class="grid">
+        <section class="panel stack" aria-labelledby="authTitle">
+          <h2 id="authTitle">Account</h2>
+          <label>
+            Email
+            <input id="email" type="email" autocomplete="email" />
+          </label>
+          <label>
+            Password
+            <input id="password" type="password" autocomplete="current-password" />
+          </label>
+          <div class="row">
+            <button class="primary" id="registerBtn">Register</button>
+            <button id="loginBtn">Log in</button>
+            <button id="logoutBtn">Log out</button>
+          </div>
+        </section>
+
+        <section class="panel stack" aria-labelledby="voiceTitle">
+          <h2 id="voiceTitle">Voice Samples</h2>
+          <div class="split">
+            <label>
+              Label
+              <input id="voiceLabel" value="default" />
+            </label>
+            <label>
+              Audio file
+              <input id="voiceFile" type="file" accept="audio/*" />
+            </label>
+          </div>
+          <div class="row">
+            <button class="primary" id="uploadVoiceBtn">Upload File</button>
+            <button id="recordSampleBtn">Record Sample</button>
+            <button class="danger" id="stopSampleBtn" disabled>Stop</button>
+          </div>
+          <ul class="list" id="voiceList"></ul>
+        </section>
+
+        <section class="panel stack" aria-labelledby="liveTitle">
+          <h2 id="liveTitle">Live Session</h2>
+          <div class="split">
+            <label>
+              Voice
+              <select id="voiceSelect"></select>
+            </label>
+            <label>
+              Discord channel
+              <input id="discordChannel" placeholder="optional" />
+            </label>
+          </div>
+          <div class="row">
+            <span class="live-state" id="liveState">idle</span>
+            <button class="primary" id="startLiveBtn">Start</button>
+            <button class="danger" id="stopLiveBtn" disabled>Stop</button>
+          </div>
+          <label>
+            Transcript
+            <textarea id="transcript"></textarea>
+          </label>
+          <div class="row">
+            <button id="sendTranscriptBtn">Send Transcript</button>
+            <button id="refreshSessionBtn">Refresh Session</button>
+          </div>
+          <pre class="panel" id="sessionView">{}</pre>
+        </section>
+      </div>
+    </main>
+
+    <script>
+      const state = {
+        token: localStorage.getItem("hermes_voice_token") || "",
+        user: null,
+        voices: [],
+        session: null,
+        sampleRecorder: null,
+        sampleChunks: [],
+        liveRecorder: null,
+        liveStream: null,
+        liveSeq: 0,
+      };
+
+      const $ = (id) => document.getElementById(id);
+
+      function setStatus(message, isError = false) {
+        $("status").textContent = message;
+        $("status").style.color = isError ? "var(--danger)" : "var(--muted)";
+      }
+
+      async function api(path, options = {}) {
+        const headers = new Headers(options.headers || {});
+        if (state.token) {
+          headers.set("Authorization", `Bearer ${state.token}`);
+        }
+        if (options.body && !(options.body instanceof FormData)) {
+          headers.set("Content-Type", "application/json");
+          options.body = JSON.stringify(options.body);
+        }
+        const response = await fetch(path, { ...options, headers });
+        const contentType = response.headers.get("content-type") || "";
+        const data = contentType.includes("application/json")
+          ? await response.json()
+          : await response.text();
+        if (!response.ok) {
+          const detail = data && data.detail ? data.detail : response.statusText;
+          throw new Error(detail);
+        }
+        return data;
+      }
+
+      function setAuth(result) {
+        state.token = result.token;
+        state.user = result.user;
+        localStorage.setItem("hermes_voice_token", state.token);
+        renderUser();
+      }
+
+      function renderUser() {
+        $("userLine").textContent = state.user
+          ? `${state.user.email} (${state.user.id.slice(0, 8)})`
+          : state.token
+            ? "Token loaded"
+            : "Signed out";
+      }
+
+      function renderVoices() {
+        $("voiceList").innerHTML = "";
+        $("voiceSelect").innerHTML = '<option value="">No voice</option>';
+        for (const voice of state.voices) {
+          const li = document.createElement("li");
+          li.className = "item";
+          li.innerHTML = `<strong>${voice.label}</strong><span class="muted">${voice.id} - ${voice.size_bytes} bytes</span>`;
+          $("voiceList").appendChild(li);
+
+          const option = document.createElement("option");
+          option.value = voice.id;
+          option.textContent = `${voice.label} (${voice.id.slice(0, 8)})`;
+          $("voiceSelect").appendChild(option);
+        }
+      }
+
+      function renderSession() {
+        $("sessionView").textContent = JSON.stringify(state.session || {}, null, 2);
+      }
+
+      async function refreshMe() {
+        if (!state.token) return;
+        try {
+          state.user = await api("/me");
+          renderUser();
+          await refreshVoices();
+        } catch (error) {
+          setStatus(error.message, true);
+        }
+      }
+
+      async function refreshVoices() {
+        state.voices = await api("/voices");
+        renderVoices();
+      }
+
+      async function register() {
+        const result = await api("/auth/register", {
+          method: "POST",
+          body: { email: $("email").value, password: $("password").value },
+        });
+        setAuth(result);
+        await refreshVoices();
+        setStatus("Registered");
+      }
+
+      async function login() {
+        const result = await api("/auth/login", {
+          method: "POST",
+          body: { email: $("email").value, password: $("password").value },
+        });
+        setAuth(result);
+        await refreshVoices();
+        setStatus("Logged in");
+      }
+
+      function logout() {
+        localStorage.removeItem("hermes_voice_token");
+        state.token = "";
+        state.user = null;
+        state.voices = [];
+        state.session = null;
+        renderUser();
+        renderVoices();
+        renderSession();
+        setStatus("Logged out");
+      }
+
+      async function uploadVoiceBlob(blob, filename) {
+        const form = new FormData();
+        form.append("label", $("voiceLabel").value || "default");
+        form.append("file", blob, filename);
+        const voice = await api("/voices", { method: "POST", body: form });
+        state.voices.unshift(voice);
+        renderVoices();
+        setStatus("Voice saved");
+      }
+
+      async function uploadSelectedVoice() {
+        const file = $("voiceFile").files[0];
+        if (!file) throw new Error("Select an audio file first.");
+        await uploadVoiceBlob(file, file.name);
+      }
+
+      async function recordSample() {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          throw new Error("Microphone access is not supported. Ensure you are using HTTPS or localhost.");
+        }
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        state.sampleChunks = [];
+        state.sampleRecorder = new MediaRecorder(stream);
+        state.sampleRecorder.ondataavailable = (event) => {
+          if (event.data.size) state.sampleChunks.push(event.data);
+        };
+        state.sampleRecorder.onstop = async () => {
+          stream.getTracks().forEach((track) => track.stop());
+          const blob = new Blob(state.sampleChunks, { type: "audio/webm" });
+          await uploadVoiceBlob(blob, "sample.webm");
+          $("recordSampleBtn").disabled = false;
+          $("stopSampleBtn").disabled = true;
+        };
+        state.sampleRecorder.start();
+        $("recordSampleBtn").disabled = true;
+        $("stopSampleBtn").disabled = false;
+        setStatus("Recording sample");
+      }
+
+      function stopSample() {
+        if (state.sampleRecorder && state.sampleRecorder.state !== "inactive") {
+          state.sampleRecorder.stop();
+        }
+      }
+
+      async function startLive() {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          throw new Error("Microphone access is not supported. Ensure you are using HTTPS or localhost.");
+        }
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+        state.session = await api("/voice-sessions", {
+          method: "POST",
+          body: {
+            voice_id: $("voiceSelect").value || null,
+            discord_channel_id: $("discordChannel").value || null,
+          },
+        });
+        state.liveSeq = 0;
+        state.liveStream = stream;
+        state.liveRecorder = new MediaRecorder(state.liveStream);
+        state.liveRecorder.ondataavailable = async (event) => {
+          if (!event.data.size || !state.session) return;
+          const form = new FormData();
+          form.append("seq", String(state.liveSeq++));
+          form.append("file", event.data, "chunk.webm");
+          try {
+            await api(`/voice-sessions/${state.session.id}/chunks`, {
+              method: "POST",
+              body: form,
+            });
+          } catch (error) {
+            setStatus(error.message, true);
+          }
+        };
+        state.liveRecorder.start(1000);
+        $("startLiveBtn").disabled = true;
+        $("stopLiveBtn").disabled = false;
+        $("liveState").textContent = "streaming";
+        $("liveState").classList.add("on");
+        renderSession();
+        setStatus("Live session started");
+      }
+
+      async function stopLive() {
+        if (state.liveRecorder && state.liveRecorder.state !== "inactive") {
+          state.liveRecorder.stop();
+        }
+        if (state.liveStream) {
+          state.liveStream.getTracks().forEach((track) => track.stop());
+        }
+        if (state.session) {
+          state.session = await api(`/voice-sessions/${state.session.id}/close`, {
+            method: "POST",
+          });
+        }
+        $("startLiveBtn").disabled = false;
+        $("stopLiveBtn").disabled = true;
+        $("liveState").textContent = "idle";
+        $("liveState").classList.remove("on");
+        renderSession();
+        setStatus("Live session stopped");
+      }
+
+      async function sendTranscript() {
+        if (!state.session) throw new Error("Start a session first.");
+        const transcript = await api(`/voice-sessions/${state.session.id}/transcripts`, {
+          method: "POST",
+          body: { text: $("transcript").value, source: "superwhisper", is_final: true },
+        });
+        state.session.transcripts = [...(state.session.transcripts || []), transcript];
+        renderSession();
+        setStatus("Transcript saved");
+      }
+
+      async function refreshSession() {
+        if (!state.session) throw new Error("No session to refresh.");
+        state.session = await api(`/voice-sessions/${state.session.id}`);
+        renderSession();
+        setStatus("Session refreshed");
+      }
+
+      function bind(id, fn) {
+        $(id).addEventListener("click", async () => {
+          try {
+            await fn();
+          } catch (error) {
+            setStatus(error.message, true);
+          }
+        });
+      }
+
+      bind("registerBtn", register);
+      bind("loginBtn", login);
+      bind("logoutBtn", logout);
+      bind("uploadVoiceBtn", uploadSelectedVoice);
+      bind("recordSampleBtn", recordSample);
+      bind("stopSampleBtn", stopSample);
+      bind("startLiveBtn", startLive);
+      bind("stopLiveBtn", stopLive);
+      bind("sendTranscriptBtn", sendTranscript);
+      bind("refreshSessionBtn", refreshSession);
+
+      renderUser();
+      renderVoices();
+      renderSession();
+      refreshMe();
+    </script>
+  </body>
+</html>

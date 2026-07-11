@@ -1,0 +1,9 @@
+fastapi
+python-multipart
+pytest
+uvicorn[standard]
+elevenlabs
+py-cord[voice]
+requests
+python-dotenv
+pynacl

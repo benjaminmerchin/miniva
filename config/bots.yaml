@@ -1,0 +1,26 @@
+# Orchestrator topology (M2 architecture)
+# A SINGLE Discord application listens to everything.
+# The backend analyzes messages to route to internal personas.
+
+master:
+  name: HermesMaster          # the orchestrator bot
+  app_id: 1525450646524788776 # from your Developer Portal (identifiant d'application)
+  public_key: 0511750eef4a5b671cd853cbf0f75c14cd00cf355d402fa5727f01c59cbd8169
+  env_token_key: DISCORD_BOT_TOKEN_MASTER
+  controller: true
+
+# These are no longer separate Discord apps, but internal personas
+personas:
+  - name: Tripo
+    role: "trip_manager"
+  - name: Taxy
+    role: "tax_manager"
+  - name: Grogro
+    role: "grocery_manager"
+  - name: General
+    role: "assistant"
+
+# Discord server where everything lives
+guild_id: 1525451187959365703
+channel_id: 1525451187959365706
+

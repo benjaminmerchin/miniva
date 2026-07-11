@@ -1,0 +1,15 @@
+.git
+.pytest_cache
+__pycache__
+*.pyc
+*.pyo
+*.log
+.env
+.env.*
+data
+logs
+temp_tts_*.mp3
+node_modules
+cloudflare-voice-worker/node_modules
+cloudflare-voice-worker/.wrangler
+cloudflare-voice-worker/dist
