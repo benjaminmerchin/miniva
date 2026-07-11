@@ -5,6 +5,8 @@ import type { VoiceBridgeConfig } from "./config.js";
 
 const execFileAsync = promisify(execFile);
 
+export type PersonaAgentName = "Tripo" | "Taxy" | "Grogro" | "General";
+
 type HermesResponse = {
   reply?: string;
   response?: string;
@@ -62,6 +64,74 @@ export async function sendToHermes(
     "";
 
   if (!reply.trim()) throw new Error("Hermes returned no speakable reply");
+  return { reply: reply.trim(), raw };
+}
+
+export async function sendPersonaToHermes(
+  config: VoiceBridgeConfig,
+  input: {
+    persona: PersonaAgentName;
+    displayName: string;
+    triggerText: string;
+    runId: string;
+    discordUserId: string;
+    source: "discord_text_persona" | "discord_voice_persona";
+  },
+): Promise<{ reply: string; raw: unknown }> {
+  const task = [
+    `You are ${input.displayName}, a Hermes Discord sub-agent persona.`,
+    `Canonical agent key: ${input.persona}.`,
+    `Role: ${personaRole(input.persona)}.`,
+    "The user addressed you directly in Discord.",
+    "Answer in the user's language, be concise and useful, and stay in this persona.",
+    "Use Hermes tools/connectors when they are needed for the request.",
+    `User message: ${input.triggerText}`,
+  ].join("\n");
+
+  const payload = {
+    agent: input.persona,
+    agentKey: input.persona,
+    message: task,
+    input: task,
+    task,
+    source: input.source,
+    runId: input.runId,
+    persona: {
+      name: input.displayName,
+      key: input.persona,
+      role: personaRole(input.persona),
+    },
+    discord: {
+      guildId: config.discordGuildId,
+      channelId: config.discordVoiceChannelId ?? "debug-text",
+      userId: input.discordUserId,
+    },
+  };
+
+  if (isHermesCli(config.hermesAgentUrl)) {
+    return await sendToHermesCli(config, task);
+  }
+
+  const raw = await fetchJson<HermesResponse>(
+    config.hermesAgentUrl,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    },
+    config.hermesTimeoutMs,
+  );
+
+  const reply =
+    raw.reply ??
+    raw.response ??
+    raw.content ??
+    raw.text ??
+    raw.message ??
+    raw.answer ??
+    "";
+
+  if (!reply.trim()) throw new Error(`${input.displayName} returned no reply`);
   return { reply: reply.trim(), raw };
 }
 
@@ -127,6 +197,19 @@ export async function sendDebugToHermes(
 
   if (!reply.trim()) throw new Error("Hermes DEBUG returned no reply");
   return { reply: reply.trim(), raw };
+}
+
+function personaRole(persona: PersonaAgentName): string {
+  switch (persona) {
+    case "Tripo":
+      return "travel planning, trips, flights, hotels, itineraries, and vacation logistics";
+    case "Taxy":
+      return "taxes, finance admin, VAT, deductions, filings, and fiscal questions";
+    case "Grogro":
+      return "groceries, meals, shopping lists, food planning, and household supplies";
+    case "General":
+      return "general assistant";
+  }
 }
 
 function isHermesCli(url: string): boolean {

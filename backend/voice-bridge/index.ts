@@ -12,7 +12,12 @@ import {
 import { loadConfig } from "./config.js";
 import { pcmToWav, playTtsBuffer } from "./audio.js";
 import { transcribeAudio } from "./transcription.js";
-import { sendDebugToHermes, sendToHermes } from "./hermes.js";
+import {
+  type PersonaAgentName,
+  sendDebugToHermes,
+  sendPersonaToHermes,
+  sendToHermes,
+} from "./hermes.js";
 import { synthesizeWithPocketTts } from "./pocket-tts.js";
 import { appendSteps, completeRun, readCrew, startRun } from "./miniva-ingest.js";
 
@@ -82,16 +87,116 @@ client.login(config.discordBotToken);
 
 client.on("messageCreate", (message) => {
   if (message.author.bot) return;
-  if (!isDebugInvocation(message.content)) return;
-
-  void processDebugMessage(message).catch(async (error) => {
-    const text = error instanceof Error ? error.message : String(error);
-    console.error("DEBUG text handler failed", text);
-    await sendLongMessage(message.channel, `DEBUG failed: ${text}`).catch((sendError) => {
-      console.error("failed to send DEBUG failure to Discord", sendError);
+  if (isDebugInvocation(message.content)) {
+    void processDebugMessage(message).catch(async (error) => {
+      const text = error instanceof Error ? error.message : String(error);
+      console.error("DEBUG text handler failed", text);
+      await sendLongMessage(message.channel, `DEBUG failed: ${text}`).catch((sendError) => {
+        console.error("failed to send DEBUG failure to Discord", sendError);
+      });
     });
+    return;
+  }
+
+  const persona = detectPersonaInvocation(message.content);
+  if (!persona) return;
+
+  void processPersonaMessage(message, persona).catch(async (error) => {
+    const text = error instanceof Error ? error.message : String(error);
+    console.error(`${persona.displayName} text handler failed`, text);
+    await sendLongMessage(message.channel, `${persona.displayName} failed: ${text}`).catch(
+      (sendError) => {
+        console.error(`failed to send ${persona.displayName} failure to Discord`, sendError);
+      },
+    );
   });
 });
+
+type PersonaInvocation = {
+  key: PersonaAgentName;
+  displayName: string;
+};
+
+const personaAliases: Array<PersonaInvocation & { pattern: RegExp }> = [
+  { pattern: /\btripy\b/i, key: "Tripo", displayName: "Tripy" },
+  { pattern: /\btripo\b/i, key: "Tripo", displayName: "Tripo" },
+  { pattern: /\btaxy\b/i, key: "Taxy", displayName: "Taxy" },
+  { pattern: /\bgrogro\b/i, key: "Grogro", displayName: "Grogro" },
+];
+
+function detectPersonaInvocation(text: string): PersonaInvocation | null {
+  for (const persona of personaAliases) {
+    if (persona.pattern.test(text)) {
+      return { key: persona.key, displayName: persona.displayName };
+    }
+  }
+  return null;
+}
+
+async function processPersonaMessage(message: Message, persona: PersonaInvocation) {
+  const runId = `persona_${persona.key.toLowerCase()}_${Date.now()}_${message.author.id}`;
+  const startedAt = Date.now();
+
+  console.log(
+    `${persona.displayName} text invocation ${runId} from ${message.author.tag} in channel ${message.channelId}`,
+  );
+  await sendLongMessage(
+    message.channel,
+    `${persona.displayName} agent invoked. Routing your message through Hermes...`,
+  );
+  console.log(`${persona.displayName} text invocation ${runId} acknowledgement sent`);
+
+  await startRun(config, {
+    runId,
+    transcript: message.content,
+    discordUserId: message.author.id,
+    agentVersions,
+  }).catch((error) => {
+    if (config.minivaIngestKey) throw error;
+  });
+
+  try {
+    console.log(`${persona.displayName} text invocation ${runId} calling Hermes`);
+    const hermes = await sendPersonaToHermes(config, {
+      persona: persona.key,
+      displayName: persona.displayName,
+      triggerText: message.content,
+      runId,
+      discordUserId: message.author.id,
+      source: "discord_text_persona",
+    });
+    console.log(
+      `${persona.displayName} text invocation ${runId} Hermes reply received (${hermes.reply.length} chars)`,
+    );
+    if (config.minivaIngestKey) {
+      await appendSteps(config, {
+        runId,
+        transcript: message.content,
+        hermesReply: hermes.reply,
+        startedAt,
+      });
+      await completeRun(config, {
+        runId,
+        outcome: `${persona.displayName} returned: ${hermes.reply.slice(0, 180)}`,
+      });
+    }
+    await sendLongMessage(message.channel, `**[${persona.displayName}]** ${hermes.reply}`);
+    console.log(`${persona.displayName} text invocation ${runId} result sent to Discord`);
+  } catch (error) {
+    const text = error instanceof Error ? error.message : String(error);
+    console.error(`${persona.displayName} text invocation ${runId} failed`, text);
+    if (config.minivaIngestKey) {
+      await completeRun(config, {
+        runId,
+        outcome: `${persona.displayName} connector turn failed.`,
+        error: text,
+      }).catch((ingestError) => {
+        console.error(`failed to report ${persona.displayName} failure`, ingestError);
+      });
+    }
+    throw error;
+  }
+}
 
 async function captureUtterance(receiver: VoiceReceiver, userId: string) {
   if (activeSpeakers.has(userId)) return;
@@ -147,17 +252,27 @@ async function processTurn(input: {
       agentVersions,
     });
 
+    const persona = detectPersonaInvocation(transcript);
     const hermes = isDebugInvocation(transcript)
       ? await sendDebugToHermes(config, {
           triggerText: transcript,
           runId,
           discordUserId: input.userId,
         })
-      : await sendToHermes(config, {
-          transcript,
-          runId,
-          discordUserId: input.userId,
-        });
+      : persona
+        ? await sendPersonaToHermes(config, {
+            persona: persona.key,
+            displayName: persona.displayName,
+            triggerText: transcript,
+            runId,
+            discordUserId: input.userId,
+            source: "discord_voice_persona",
+          })
+        : await sendToHermes(config, {
+            transcript,
+            runId,
+            discordUserId: input.userId,
+          });
     const audio = await synthesizeWithPocketTts(config, hermes.reply);
 
     await appendSteps(config, {
