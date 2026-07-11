@@ -12,6 +12,7 @@ import Compare from "./pages/Compare";
 import Crew from "./pages/Crew";
 import Evals from "./pages/Evals";
 import Alerts from "./pages/Alerts";
+import Billing from "./pages/Billing";
 import Setup from "./pages/Setup";
 
 export default function App() {
@@ -80,6 +81,7 @@ function Shell() {
           <Nav to="/app/crew" label="Crew" />
           <Nav to="/app/evals" label="Evals" />
           <Nav to="/app/alerts" label="Alerts" badge={openAlerts} />
+          <Nav to="/app/billing" label="Billing" />
         </nav>
 
         <div className="mt-auto space-y-2 px-3 pb-4">
@@ -108,6 +110,7 @@ function Shell() {
           <Route path="crew" element={<Crew serverId={server._id} />} />
           <Route path="evals" element={<Evals serverId={server._id} />} />
           <Route path="alerts" element={<Alerts serverId={server._id} />} />
+          <Route path="billing" element={<Billing serverId={server._id} />} />
         </Routes>
       </main>
     </div>
