@@ -86,7 +86,10 @@ client.on("messageCreate", (message) => {
 
   void processDebugMessage(message).catch(async (error) => {
     const text = error instanceof Error ? error.message : String(error);
-    await sendLongMessage(message.channel, `DEBUG failed: ${text}`).catch(() => {});
+    console.error("DEBUG text handler failed", text);
+    await sendLongMessage(message.channel, `DEBUG failed: ${text}`).catch((sendError) => {
+      console.error("failed to send DEBUG failure to Discord", sendError);
+    });
   });
 });
 
@@ -186,10 +189,14 @@ async function processDebugMessage(message: Message) {
   const runId = `debug_${Date.now()}_${message.author.id}`;
   const startedAt = Date.now();
 
+  console.log(
+    `DEBUG text invocation ${runId} from ${message.author.tag} in channel ${message.channelId}`,
+  );
   await sendLongMessage(
     message.channel,
     "DEBUG agent invoked. Asking Hermes to run `ping -c 3 google.com` through its connector/tooling...",
   );
+  console.log(`DEBUG text invocation ${runId} acknowledgement sent`);
 
   await startRun(config, {
     runId,
@@ -201,11 +208,15 @@ async function processDebugMessage(message: Message) {
   });
 
   try {
+    console.log(`DEBUG text invocation ${runId} calling Hermes`);
     const hermes = await sendDebugToHermes(config, {
       triggerText: message.content,
       runId,
       discordUserId: message.author.id,
     });
+    console.log(
+      `DEBUG text invocation ${runId} Hermes reply received (${hermes.reply.length} chars)`,
+    );
     if (config.minivaIngestKey) {
       await appendSteps(config, {
         runId,
@@ -219,8 +230,10 @@ async function processDebugMessage(message: Message) {
       });
     }
     await sendLongMessage(message.channel, `DEBUG result:\n${hermes.reply}`);
+    console.log(`DEBUG text invocation ${runId} result sent to Discord`);
   } catch (error) {
     const text = error instanceof Error ? error.message : String(error);
+    console.error(`DEBUG text invocation ${runId} failed`, text);
     if (config.minivaIngestKey) {
       await completeRun(config, {
         runId,
