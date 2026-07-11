@@ -225,7 +225,7 @@ async function sendToHermesCli(
     [
       "chat",
       "-q",
-      prompt,
+      withDiscordReplyEnvelope(prompt),
       "--yolo",
       "-Q",
       "--max-turns",
@@ -238,7 +238,37 @@ async function sendToHermesCli(
       maxBuffer: 1024 * 1024 * 4,
     },
   );
-  const reply = [stdout.trim(), stderr.trim()].filter(Boolean).join("\n\n");
+  const rawReply = [stdout.trim(), stderr.trim()].filter(Boolean).join("\n\n");
+  const reply = extractDiscordReply(rawReply);
   if (!reply) throw new Error("Hermes CLI returned no output");
   return { reply, raw: { stdout, stderr, transport: "hermes-cli" } };
+}
+
+function withDiscordReplyEnvelope(prompt: string): string {
+  return [
+    prompt,
+    "",
+    "For the final user-visible answer, output exactly one block:",
+    "<discord_reply>",
+    "your Discord-ready answer here",
+    "</discord_reply>",
+    "Do not put reasoning, session IDs, or tool logs inside that block.",
+  ].join("\n");
+}
+
+function extractDiscordReply(raw: string): string {
+  const cleaned = stripAnsi(raw).replace(/\r/g, "");
+  const match = cleaned.match(/<discord_reply>\s*([\s\S]*?)\s*<\/discord_reply>/i);
+  if (match?.[1]?.trim()) return match[1].trim();
+
+  return cleaned
+    .split("\n")
+    .filter((line) => !/^session_id:\s*/i.test(line.trim()))
+    .filter((line) => !line.includes("┌─ Reasoning"))
+    .join("\n")
+    .trim();
+}
+
+function stripAnsi(text: string): string {
+  return text.replace(/\u001b\[[0-?]*[ -/]*[@-~]/g, "");
 }
