@@ -216,6 +216,68 @@ export default defineSchema({
     costUsd: v.number(),
   }).index("by_eval_run", ["evalRunId"]),
 
+  // Google Calendar OAuth broker: Miniva holds one OAuth app and every user's
+  // refresh token; Hermes boxes only ever see short-lived access tokens.
+  googleTokens: defineTable({
+    serverId: v.id("servers"),
+    userHandle: v.string(), // Hermes-side identity, e.g. a Discord user id
+    email: v.optional(v.string()),
+    refreshToken: v.string(),
+    scope: v.string(),
+    connectedAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_server_user", ["serverId", "userHandle"]),
+
+  // Single-use CSRF states for the OAuth dance. Consumed (deleted) on callback.
+  oauthStates: defineTable({
+    state: v.string(),
+    serverId: v.id("servers"),
+    userHandle: v.string(),
+    createdAt: v.number(),
+  }).index("by_state", ["state"]),
+
+  // A supplier invoice the Accountant crew ingested. The photo lives in R2
+  // behind the worker (miniva.co/invoices/img/<key>); the digest and the
+  // balanced double-entry lines live here. Sum(débit) = Sum(crédit) = TTC.
+  invoices: defineTable({
+    serverId: v.id("servers"),
+    invoiceId: v.string(), // Hermes-supplied, stable, idempotent
+    runId: v.optional(v.string()), // the trace that produced it, when there is one
+
+    photoKey: v.string(), // R2 object key
+    photoUrl: v.string(), // what the panel's <img> loads
+
+    // The digest, as read off the photo.
+    vendor: v.string(),
+    invoiceNumber: v.optional(v.string()),
+    issuedAt: v.number(),
+    currency: v.string(),
+    amountHT: v.number(),
+    vatRate: v.optional(v.number()), // 20 means 20%
+    amountTVA: v.number(),
+    amountTTC: v.number(),
+    category: v.string(), // "software" | "travel" | "meals" | ...
+    summary: v.optional(v.string()),
+
+    // The ligne comptable, PCG-style. Never trusted blindly: the ingest layer
+    // re-checks the balance and flags anything off as needs_review.
+    lines: v.array(
+      v.object({
+        account: v.string(), // "6265", "44566", "401"...
+        label: v.string(),
+        debit: v.number(),
+        credit: v.number(),
+      }),
+    ),
+
+    status: v.union(v.literal("ingested"), v.literal("needs_review")),
+    note: v.optional(v.string()), // why it needs review
+    createdAt: v.number(),
+  })
+    .index("by_server", ["serverId"])
+    .index("by_invoice_id", ["invoiceId"])
+    .index("by_server_issued", ["serverId", "issuedAt"]),
+
   // Signups — needed for the cross-track bonus, and the Dodo checkout hangs off it.
   signups: defineTable({
     email: v.string(),

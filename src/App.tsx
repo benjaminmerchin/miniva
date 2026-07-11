@@ -12,6 +12,7 @@ import Compare from "./pages/Compare";
 import Crew from "./pages/Crew";
 import Evals from "./pages/Evals";
 import Alerts from "./pages/Alerts";
+import Invoices from "./pages/Invoices";
 import Billing from "./pages/Billing";
 import HermesLive from "./pages/HermesLive";
 import Setup from "./pages/Setup";
@@ -81,6 +82,7 @@ function Shell() {
         <nav className="flex flex-col gap-0.5 px-3">
           <Nav to="/app" end label="Overview" />
           <Nav to="/app/runs" label="Runs" />
+          <Nav to="/app/invoices" label="Invoices" />
           <Nav to="/app/crew" label="Crew" />
           <Nav to="/app/evals" label="Evals" />
           <Nav to="/app/alerts" label="Alerts" badge={openAlerts} />
@@ -124,6 +126,7 @@ function Shell() {
           <Route path="runs" element={<Runs serverId={server._id} />} />
           <Route path="runs/compare" element={<Compare serverId={server._id} />} />
           <Route path="runs/:runId" element={<RunDetail />} />
+          <Route path="invoices" element={<Invoices serverId={server._id} />} />
           <Route path="crew" element={<Crew serverId={server._id} />} />
           <Route path="evals" element={<Evals serverId={server._id} />} />
           <Route path="alerts" element={<Alerts serverId={server._id} />} />

@@ -12,6 +12,11 @@
     // so the www redirect would never fire on the homepage.
     "run_worker_first": true
   },
+  "r2_buckets": [
+    // Invoice photos. R2 because ingress/egress are free; served back by the
+    // worker at /invoices/img/<key>.
+    { "binding": "INVOICES", "bucket_name": "miniva-invoices" }
+  ],
   "routes": [
     { "pattern": "miniva.co", "custom_domain": true },
     { "pattern": "www.miniva.co", "custom_domain": true }

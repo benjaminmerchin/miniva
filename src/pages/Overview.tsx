@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
 import { usd, duration, pct, ago, STATUS_STYLE } from "../lib/format";
+import AskTheWeb from "../components/AskTheWeb";
 
 export default function Overview({ serverId }: { serverId: Id<"servers"> }) {
   const stats = useQuery(api.runs.stats, { serverId });
@@ -21,6 +22,8 @@ export default function Overview({ serverId }: { serverId: Id<"servers"> }) {
       <p className="mt-0.5 text-[13px] text-muted">
         Everything the crew did, and what it cost.
       </p>
+
+      <AskTheWeb />
 
       <div className="mt-6 grid grid-cols-4 gap-3">
         <Stat
