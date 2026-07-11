@@ -1,32 +1,107 @@
-# React + TypeScript + Vite
+# Miniva
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+**Give a Discord server an ops crew, and see every decision it made.**
 
-Currently, two official plugins are available:
+Live: **[miniva.co](https://miniva.co)** · Demo account: `demo@miniva.co` / `miniva-demo-2026`
+(there's a one-click "Open the demo account" button on the sign-in screen)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+A manager agent reads what lands in the server, decides what it needs, and delegates to
+specialists — docs answers, billing and refunds, moderation, a voice concierge. Miniva is
+the control surface: define the roles, watch the crew work, see what it cost, and find out
+where it went wrong.
 
-## React Compiler
+Built on [Hermes](https://github.com/nousresearch/hermes-agent).
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the Oxlint configuration
+## For the mentor, in 60 seconds
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+| What you want to check | Where |
+|---|---|
+| **Trace tree** — who called whom, cost and tokens per step | `/app/runs/:runId` — click any run. Steps nest by `parentStepId`; the bar on the right is when in the run each step actually ran |
+| **Diff two runs** — find where a regression started | `/app/runs/compare` — pick two runs, Miniva names the exact step where they diverged |
+| **Alerts** — failures and cost spikes | `/app/alerts` — a run costing 3× this server's rolling baseline pages you |
+| **Search and filter across runs** | `/app/runs` — by agent, by status, by free text over the trigger / outcome / error |
+| **Evals, closed loop** | `/app/evals` — every failed or escalated run becomes a test case automatically. The chart is the score per version |
+| **Management UI** | `/app/crew` — define a role (job, tools, guardrails) with no code. Saving bumps the version; Hermes re-reads it on the next message |
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+## How Hermes is used
+
+Both of the qualifying ways.
+
+**As the base harness.** Hermes runs the crew. Miniva writes the agent config; Hermes reads
+it from `GET /v1/config` and builds the crew from it. Hermes then posts its execution trace
+back to Miniva as it works. The wire is documented in [CONTRACT.md](./CONTRACT.md), and
+[`scripts/hermes-smoke.mjs`](./scripts/hermes-smoke.mjs) exercises it end to end against
+production.
+
+**As the coding partner.** This repo was built during the sprint; the commit history is the
+receipt.
+
+## Architecture
+
+Convex is the shared memory. There is no other backend.
+
+```
+Discord ──► Hermes instance ──┬── GET  /v1/config       reads the crew Miniva defined
+                              ├── POST /v1/runs         a task starts
+                              ├── POST /v1/steps        every agent action, with parentStepId
+                              └── POST /v1/runs/complete
+                                        │
+                                        ▼
+                                    Convex  ◄──── Miniva writes agent roles, guardrails,
+                                        │         prompt versions, eval cases
+                                        ▼
+                              miniva.co (Cloudflare)
+                              live traces via Convex subscriptions
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+- **Convex** — database, the `/v1/*` ingest API as HTTP actions, Better Auth as a component,
+  and real-time subscriptions so traces stream into the dashboard without polling.
+- **Cloudflare** — hosts the SPA on `miniva.co`; a small worker in front of the assets sends
+  `www` to the apex.
+- **Vite + React + Tailwind + shadcn/ui + motion**.
+
+`parentStepId` is the load-bearing field: it is what makes the trace a tree rather than a
+list. Cost and tokens are attributed per step, not just per run.
+
+## What is real and what is not
+
+Stated plainly, because it changes how you should read the dashboard.
+
+- **Real**: the platform, the Convex backend, the `/v1/*` ingest API (verified live — see the
+  smoke test), auth, the deploy on `miniva.co`, email routing, and every feature in the table
+  above.
+- **Seeded**: the demo server's seven runs (`convex/seed.ts`) are fixtures, not agent output.
+  They exist so the dashboard could be built and shown before the Hermes instance was
+  provisioned, and they carry the exact shape Hermes posts — so when the real instance
+  connects, nothing in the UI changes, the data just becomes real. **They are not presented as
+  agent work.** Real runs are the ones ingested through `/v1/*`.
+
+## Partner integrations
+
+- **Convex** — the main backend. Product state, ingest API, auth, real-time subscriptions.
+- **Cloudflare** — hosting, the www-redirect worker, and email routing on `miniva.co`.
+- **Linkup** — exposed to agents as the `linkup.search` tool (live web search).
+- **ElevenLabs** — exposed as `elevenlabs.speak`; the voice concierge joins a Discord voice
+  channel and answers out loud.
+- **Wispr Flow** — dictation during the build.
+
+## Running it
+
+```bash
+pnpm install
+npx convex dev                 # pushes the schema, generates types, watches
+npx vite                       # http://localhost:5173
+npx convex run seed:demo       # optional: the demo fixtures
+node scripts/hermes-smoke.mjs  # prove the ingest contract works
+```
+
+Environment (`.env.local`, gitignored):
+
+```
+CONVEX_DEPLOY_KEY=...
+VITE_CONVEX_URL=https://<deployment>.convex.cloud
+VITE_CONVEX_SITE_URL=https://<deployment>.convex.site
+VITE_SITE_URL=http://localhost:5173
+```

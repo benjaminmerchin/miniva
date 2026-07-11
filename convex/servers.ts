@@ -64,3 +64,13 @@ export const setPlan = mutation({
     await ctx.db.patch(serverId, { plan });
   },
 });
+
+/** Burn the old key and issue a new one. Used when a key leaks. */
+export const rotateIngestKey = mutation({
+  args: { serverId: v.id("servers") },
+  handler: async (ctx, { serverId }) => {
+    const ingestKey = `mnv_${crypto.randomUUID().replace(/-/g, "")}`;
+    await ctx.db.patch(serverId, { ingestKey });
+    return ingestKey;
+  },
+});

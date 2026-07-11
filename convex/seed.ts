@@ -66,7 +66,9 @@ export const demo = mutation({
       hermesInstanceId: "hermes-fra-01",
       hermesUrl: "https://hermes-fra-01.miniva.co",
       status: "live",
-      ingestKey: "mnv_demo_key_do_not_ship",
+      // Generated, never hardcoded: this repo is public, and a literal here
+      // would be a live credential anyone could post fake runs with.
+      ingestKey: `mnv_${crypto.randomUUID().replace(/-/g, "")}`,
       plan: "pro",
       createdAt: now - 6 * HOUR,
     });
