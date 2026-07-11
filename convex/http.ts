@@ -1,6 +1,7 @@
 import { httpRouter } from "convex/server";
 import { httpAction } from "./_generated/server";
 import { internal } from "./_generated/api";
+import { authComponent, createAuth } from "./auth";
 
 /**
  * The wire between a Hermes instance and Miniva.
@@ -11,6 +12,9 @@ import { internal } from "./_generated/api";
  * Base URL is the Convex HTTP Actions URL (the .convex.site one, not .convex.cloud).
  */
 const http = httpRouter();
+
+// Better Auth's routes (/api/auth/*) live on the same router as the ingest API.
+authComponent.registerRoutes(http, createAuth, { cors: true });
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {

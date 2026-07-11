@@ -1,6 +1,9 @@
 import { Routes, Route, NavLink, Navigate, useLocation } from "react-router-dom";
-import { useQuery } from "convex/react";
+import { useQuery, Authenticated, Unauthenticated, AuthLoading } from "convex/react";
+import { LogOut } from "lucide-react";
 import { api } from "../convex/_generated/api";
+import { authClient } from "@/lib/auth-client";
+import Login from "./pages/Login";
 import Landing from "./pages/Landing";
 import Overview from "./pages/Overview";
 import Runs from "./pages/Runs";
@@ -15,9 +18,25 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<Landing />} />
-      <Route path="/setup" element={<Setup />} />
-      <Route path="/app/*" element={<Shell />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/setup" element={<Guarded><Setup /></Guarded>} />
+      <Route path="/app/*" element={<Guarded><Shell /></Guarded>} />
     </Routes>
+  );
+}
+
+/** Everything behind the marketing pages needs an account. */
+function Guarded({ children }: { children: React.ReactNode }) {
+  return (
+    <>
+      <AuthLoading>
+        <Booting label="Signing you in…" />
+      </AuthLoading>
+      <Unauthenticated>
+        <Navigate to="/login" replace />
+      </Unauthenticated>
+      <Authenticated>{children}</Authenticated>
+    </>
   );
 }
 
@@ -63,13 +82,20 @@ function Shell() {
           <Nav to="/app/alerts" label="Alerts" badge={openAlerts} />
         </nav>
 
-        <div className="mt-auto px-3 pb-4">
+        <div className="mt-auto space-y-2 px-3 pb-4">
           <div className="rounded-lg border border-line-soft px-3 py-2.5">
             <div className="text-[11px] text-faint">Ingest key</div>
             <code className="mt-0.5 block truncate text-[11px] text-muted">
               {server.ingestKey}
             </code>
           </div>
+          <button
+            onClick={() => authClient.signOut()}
+            className="flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-[12px] text-faint transition-colors hover:bg-raised/60 hover:text-fg"
+          >
+            <LogOut size={12} />
+            Sign out
+          </button>
         </div>
       </aside>
 
@@ -122,12 +148,12 @@ function Nav({
   );
 }
 
-function Booting() {
+function Booting({ label = "Connecting to Convex…" }: { label?: string }) {
   return (
     <div className="flex h-full items-center justify-center">
       <div className="flex items-center gap-2.5 text-[13px] text-faint">
         <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-blurple" />
-        Connecting to Convex…
+        {label}
       </div>
     </div>
   );
