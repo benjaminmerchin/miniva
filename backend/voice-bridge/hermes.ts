@@ -258,8 +258,15 @@ function withDiscordReplyEnvelope(prompt: string): string {
 
 function extractDiscordReply(raw: string): string {
   const cleaned = stripAnsi(raw).replace(/\r/g, "");
-  const match = cleaned.match(/<discord_reply>\s*([\s\S]*?)\s*<\/discord_reply>/i);
-  if (match?.[1]?.trim()) return match[1].trim();
+  const lower = cleaned.toLowerCase();
+  const closeTag = "</discord_reply>";
+  const openTag = "<discord_reply>";
+  const closeIndex = lower.lastIndexOf(closeTag);
+  const openIndex = closeIndex >= 0 ? lower.lastIndexOf(openTag, closeIndex) : -1;
+  if (openIndex >= 0 && closeIndex > openIndex) {
+    const reply = cleaned.slice(openIndex + openTag.length, closeIndex).trim();
+    if (reply) return reply;
+  }
 
   return cleaned
     .split("\n")
