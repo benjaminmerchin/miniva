@@ -34,6 +34,18 @@ client.once("ready", async () => {
   if (!client.user) throw new Error("Discord client has no user after ready");
 
   const guild = await client.guilds.fetch(config.discordGuildId);
+
+  if (config.debugTextOnly) {
+    console.log(
+      `Miniva DEBUG text bridge ready as ${client.user.tag} in ${guild.name}`,
+    );
+    return;
+  }
+
+  if (!config.discordVoiceChannelId) {
+    throw new Error("DISCORD_VOICE_CHANNEL_ID is required outside DEBUG_TEXT_ONLY");
+  }
+
   const channel = await guild.channels.fetch(config.discordVoiceChannelId);
   if (!channel || channel.type !== ChannelType.GuildVoice) {
     throw new Error("DISCORD_VOICE_CHANNEL_ID must point to a guild voice channel");
@@ -180,6 +192,8 @@ async function processDebugMessage(message: Message) {
     transcript: message.content,
     discordUserId: message.author.id,
     agentVersions,
+  }).catch((error) => {
+    if (config.minivaIngestKey) throw error;
   });
 
   try {
@@ -188,24 +202,28 @@ async function processDebugMessage(message: Message) {
       runId,
       discordUserId: message.author.id,
     });
-    await appendSteps(config, {
-      runId,
-      transcript: message.content,
-      hermesReply: hermes.reply,
-      startedAt,
-    });
-    await completeRun(config, {
-      runId,
-      outcome: `DEBUG connector test returned: ${hermes.reply.slice(0, 180)}`,
-    });
+    if (config.minivaIngestKey) {
+      await appendSteps(config, {
+        runId,
+        transcript: message.content,
+        hermesReply: hermes.reply,
+        startedAt,
+      });
+      await completeRun(config, {
+        runId,
+        outcome: `DEBUG connector test returned: ${hermes.reply.slice(0, 180)}`,
+      });
+    }
     await sendLongMessage(message.channel, `DEBUG result:\n${hermes.reply}`);
   } catch (error) {
     const text = error instanceof Error ? error.message : String(error);
-    await completeRun(config, {
-      runId,
-      outcome: "DEBUG connector test failed.",
-      error: text,
-    }).catch((ingestError) => console.error("failed to report debug failure", ingestError));
+    if (config.minivaIngestKey) {
+      await completeRun(config, {
+        runId,
+        outcome: "DEBUG connector test failed.",
+        error: text,
+      }).catch((ingestError) => console.error("failed to report debug failure", ingestError));
+    }
     throw error;
   }
 }

@@ -127,6 +127,9 @@ async function minivaFetch<T>(
   path: string,
   init: RequestInit,
 ): Promise<T> {
+  if (!config.minivaIngestKey) {
+    throw new Error("MINIVA_INGEST_KEY is required for Miniva ingest");
+  }
   return await fetchJson<T>(
     `${config.minivaBaseUrl.replace(/\/$/, "")}${path}`,
     {

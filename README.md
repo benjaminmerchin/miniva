@@ -140,6 +140,7 @@ POCKET_TTS_MODE=pocket
 POCKET_TTS_VOICE=/Users/mac/Desktop/te2.mp3
 FFMPEG_PATH=ffmpeg
 DEBUG_AGENT_NAME=DEBUG
+DEBUG_TEXT_ONLY=false
 ```
 
 Run it:
@@ -166,6 +167,13 @@ command: ping -c 3 google.com
 The Hermes response is posted back into the same Discord text channel. If a
 voice transcript contains `DEBUG`, the same DEBUG agent path is used before
 Pocket TTS speaks the result.
+
+For a text-only DEBUG smoke test without joining a voice channel or writing
+Miniva ingest traces, set:
+
+```bash
+DEBUG_TEXT_ONLY=true
+```
 
 ## Checks
 

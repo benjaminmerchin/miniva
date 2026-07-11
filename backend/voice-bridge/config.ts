@@ -5,9 +5,9 @@ export type TtsMode = "pocket" | "openai";
 export type VoiceBridgeConfig = {
   discordBotToken: string;
   discordGuildId: string;
-  discordVoiceChannelId: string;
+  discordVoiceChannelId?: string;
   minivaBaseUrl: string;
-  minivaIngestKey: string;
+  minivaIngestKey?: string;
   hermesAgentUrl: string;
   hermesTimeoutMs: number;
   pocketTtsUrl: string;
@@ -19,16 +19,20 @@ export type VoiceBridgeConfig = {
   sttTimeoutMs: number;
   silenceMs: number;
   minUtteranceMs: number;
+  debugTextOnly: boolean;
 };
 
 export function loadConfig(env = process.env): VoiceBridgeConfig {
   loadDotEnv(env);
+  const debugTextOnly = boolEnv(env, "DEBUG_TEXT_ONLY", false);
   return {
     discordBotToken: required(env, "DISCORD_BOT_TOKEN"),
     discordGuildId: required(env, "DISCORD_GUILD_ID"),
-    discordVoiceChannelId: required(env, "DISCORD_VOICE_CHANNEL_ID"),
+    discordVoiceChannelId: debugTextOnly
+      ? env.DISCORD_VOICE_CHANNEL_ID
+      : required(env, "DISCORD_VOICE_CHANNEL_ID"),
     minivaBaseUrl: env.MINIVA_BASE_URL ?? env.MINIVA_BASE ?? "https://friendly-lion-451.convex.site",
-    minivaIngestKey: required(env, "MINIVA_INGEST_KEY"),
+    minivaIngestKey: debugTextOnly ? env.MINIVA_INGEST_KEY : required(env, "MINIVA_INGEST_KEY"),
     hermesAgentUrl: env.HERMES_AGENT_URL ?? "http://127.0.0.1:8787/api/agent",
     hermesTimeoutMs: intEnv(env, "HERMES_AGENT_TIMEOUT_MS", 60_000),
     pocketTtsUrl: env.POCKET_TTS_URL ?? "http://127.0.0.1:8000",
@@ -40,6 +44,7 @@ export function loadConfig(env = process.env): VoiceBridgeConfig {
     sttTimeoutMs: intEnv(env, "STT_TIMEOUT_MS", 60_000),
     silenceMs: intEnv(env, "VOICE_SILENCE_MS", 900),
     minUtteranceMs: intEnv(env, "VOICE_MIN_UTTERANCE_MS", 650),
+    debugTextOnly,
   };
 }
 
@@ -70,6 +75,12 @@ function intEnv(env: NodeJS.ProcessEnv, name: string, fallback: number): number 
     throw new Error(`${name} must be a positive integer`);
   }
   return parsed;
+}
+
+function boolEnv(env: NodeJS.ProcessEnv, name: string, fallback: boolean): boolean {
+  const raw = env[name]?.toLowerCase();
+  if (!raw) return fallback;
+  return raw === "1" || raw === "true" || raw === "yes";
 }
 
 function ttsMode(raw: string | undefined): TtsMode {

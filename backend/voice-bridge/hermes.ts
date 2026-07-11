@@ -29,7 +29,7 @@ export async function sendToHermes(
     runId: input.runId,
     discord: {
       guildId: config.discordGuildId,
-      channelId: config.discordVoiceChannelId,
+      channelId: config.discordVoiceChannelId ?? "debug-text",
       userId: input.discordUserId,
     },
   };
@@ -97,7 +97,7 @@ export async function sendDebugToHermes(
     },
     discord: {
       guildId: config.discordGuildId,
-      channelId: config.discordVoiceChannelId,
+      channelId: config.discordVoiceChannelId ?? "debug-text",
       userId: input.discordUserId,
     },
   };
