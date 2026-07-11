@@ -122,6 +122,24 @@ Deux choses se déclenchent automatiquement côté Miniva quand un run finit :
   du rubric "Evaluation" L5 : les échecs de prod alimentent le jeu de tests tout seuls).
 - coût > 3× la baseline du serveur → une **alerte cost spike**.
 
+### Voice channel live
+
+Le bridge Discord vocal utilise le même auth serveur (`MINIVA_INGEST_KEY`) et le
+même ingest HTTP. Pour chaque prise de parole dans un channel vocal :
+
+1. STT produit une transcription.
+2. Le bridge appelle `HERMES_AGENT_URL` avec `source: "discord_voice"`.
+3. Pocket TTS génère la voix de réponse.
+4. Le bridge rejoue l'audio dans le même channel vocal.
+5. Miniva reçoit un run `taskKind: "discord_voice"` avec trois steps imbriqués :
+   `speech.transcribe` → `hermes.agent` → `pocket-tts.speak`.
+
+L'URL Hermes reste une seule ligne d'env :
+
+```bash
+HERMES_AGENT_URL=http://127.0.0.1:8787/api/agent
+```
+
 ## 5. Provisioning fini
 
 ```bash

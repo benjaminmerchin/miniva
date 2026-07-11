@@ -105,3 +105,70 @@ VITE_CONVEX_URL=https://<deployment>.convex.cloud
 VITE_CONVEX_SITE_URL=https://<deployment>.convex.site
 VITE_SITE_URL=http://localhost:5173
 ```
+
+## Discord Voice Bridge
+
+The voice bridge joins a Discord voice channel, listens for user utterances,
+sends them to STT, forwards the transcript to Hermes, generates speech with
+Pocket TTS, and plays the reply back into the same channel.
+
+For local desktop Hermes connected to Codex/tooling:
+
+```bash
+HERMES_AGENT_URL=hermes-cli://local
+```
+
+When Hermes moves to an HTTP server, VPS, or Cloudflare endpoint, only change
+that value:
+
+```bash
+HERMES_AGENT_URL=http://127.0.0.1:8787/api/agent
+```
+
+Required bridge env:
+
+```bash
+DISCORD_BOT_TOKEN=replace-me
+DISCORD_GUILD_ID=123456789012345678
+DISCORD_VOICE_CHANNEL_ID=123456789012345678
+MINIVA_BASE_URL=https://your-deployment.convex.site
+MINIVA_INGEST_KEY=mnv_replace_me
+HERMES_AGENT_URL=hermes-cli://local
+STT_URL=http://127.0.0.1:9000/transcribe
+POCKET_TTS_URL=http://127.0.0.1:8000
+POCKET_TTS_MODE=pocket
+POCKET_TTS_VOICE=/Users/mac/Desktop/te2.mp3
+FFMPEG_PATH=ffmpeg
+DEBUG_AGENT_NAME=DEBUG
+```
+
+Run it:
+
+```bash
+pnpm voice:bridge
+```
+
+The bridge authenticates to Miniva with `MINIVA_INGEST_KEY`, not a user session.
+User-facing auth remains Better Auth in Convex; server-to-server trace ingest
+uses the per-server bearer key.
+
+When any Discord text message contains `DEBUG`, the bridge skips the normal
+voice/chat path and asks Hermes for a connector test:
+
+```text
+agent: DEBUG
+skip_gemma4_evaluation: true
+command: ping -c 3 google.com
+```
+
+The Hermes response is posted back into the same Discord text channel. If a
+voice transcript contains `DEBUG`, the same DEBUG agent path is used before
+Pocket TTS speaks the result.
+
+Checks:
+
+```bash
+pnpm voice:check
+pnpm build
+pnpm lint
+```
