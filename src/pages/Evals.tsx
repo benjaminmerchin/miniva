@@ -135,9 +135,14 @@ export default function Evals({ serverId }: { serverId: Id<"servers"> }) {
   );
 }
 
-/** Simple, honest line chart — one point per run of the set, oldest on the left. */
+/**
+ * Simple, honest line chart — one point per completed run of the set, oldest on
+ * the left. The line lives in a stretched SVG; the dots are HTML laid on top,
+ * because circles inside a preserveAspectRatio="none" viewBox get smeared into
+ * ellipses — which is exactly the bug this replaced.
+ */
 function ScoreTrend({ runs }: { runs: any[] }) {
-  const points = [...runs].reverse();
+  const points = [...runs].reverse().filter((r) => r.status === "done" && r.total > 0);
   if (points.length < 2) {
     return (
       <p className="py-8 text-center text-[12px] text-faint">
@@ -146,20 +151,21 @@ function ScoreTrend({ runs }: { runs: any[] }) {
     );
   }
 
-  const W = 100;
-  const H = 100;
+  // Percent coordinates with padding so a perfect score isn't clipped at the top.
+  const PX = 3;
+  const PY = 10;
   const coords = points.map((r, i) => ({
-    x: (i / (points.length - 1)) * W,
-    y: H - (r.total ? r.passed / r.total : 0) * H,
+    x: PX + (i / (points.length - 1)) * (100 - 2 * PX),
+    y: 100 - PY - (r.passed / r.total) * (100 - 2 * PY),
     run: r,
   }));
-  const path = coords.map((c, i) => `${i ? "L" : "M"} ${c.x} ${c.y}`).join(" ");
+  const path = coords
+    .map((c, i) => `${i ? "L" : "M"} ${c.x.toFixed(2)} ${c.y.toFixed(2)}`)
+    .join(" ");
 
   const first = points[0];
-  const last = points.at(-1);
-  const gain =
-    (last.total ? last.passed / last.total : 0) -
-    (first.total ? first.passed / first.total : 0);
+  const last = points.at(-1)!;
+  const gain = last.passed / last.total - first.passed / first.total;
 
   return (
     <div className="mt-3">
@@ -177,36 +183,30 @@ function ScoreTrend({ runs }: { runs: any[] }) {
 
       <div className="relative mt-3 h-28">
         <svg
-          viewBox={`0 0 ${W} ${H}`}
+          viewBox="0 0 100 100"
           preserveAspectRatio="none"
-          className="h-full w-full overflow-visible"
+          className="absolute inset-0 h-full w-full"
         >
-          <motion.path
-            d={path}
-            fill="none"
-            stroke="#5865f2"
-            strokeWidth={1.5}
-            vectorEffect="non-scaling-stroke"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-          />
-          {coords.map((c, i) => (
-            <circle
-              key={i}
-              cx={c.x}
-              cy={c.y}
-              r={2}
-              fill="#5865f2"
-              vectorEffect="non-scaling-stroke"
-            />
-          ))}
+          {/*
+            No non-scaling-stroke here: Chrome renders it as broken dashes when
+            the viewBox is stretched. ViewBox-unit stroke on a shallow line
+            stays visually ~1.5px.
+          */}
+          <path d={path} fill="none" stroke="#5865f2" strokeWidth={1.5} />
         </svg>
+        {coords.map((c, i) => (
+          <span
+            key={i}
+            title={`${c.run.passed}/${c.run.total} — ${c.run.label}`}
+            className="absolute h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-blurple ring-2 ring-panel"
+            style={{ left: `${c.x}%`, top: `${c.y}%` }}
+          />
+        ))}
       </div>
 
       <div className="mt-2 flex justify-between gap-2">
         {points.map((r) => (
-          <span key={r._id} className="flex-1 truncate text-[10px] text-faint">
+          <span key={r._id} className="min-w-0 flex-1 truncate text-[10px] text-faint">
             {r.label.split("—")[0].trim()}
           </span>
         ))}

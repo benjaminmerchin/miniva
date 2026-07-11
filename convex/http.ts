@@ -71,6 +71,7 @@ http.route({
       discordUserId: b.discordUserId,
       agentVersions: b.agentVersions,
       evalCaseId: b.evalCaseId,
+      startedAt: b.startedAt,
     });
     return json({ ok: true, runId: b.runId });
   }),
@@ -135,6 +136,7 @@ http.route({
       status: b.status,
       outcome: b.outcome,
       error: b.error,
+      endedAt: b.endedAt,
     });
     return json({ ok: true });
   }),

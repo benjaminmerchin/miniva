@@ -65,18 +65,18 @@ Discord ──► Hermes instance ──┬── GET  /v1/config       reads th
 `parentStepId` is the load-bearing field: it is what makes the trace a tree rather than a
 list. Cost and tokens are attributed per step, not just per run.
 
-## What is real and what is not
+## The data is real
 
-Stated plainly, because it changes how you should read the dashboard.
+The runs in the dashboard are the actual sessions of the Hermes instance running the demo
+Discord (`hermes-fra-01`), ingested through the `/v1/*` API by
+[`scripts/hermes-bridge.mjs`](./scripts/hermes-bridge.mjs): every assistant turn, every tool
+invocation with its real result, on the session's own timestamps. Development fixtures
+existed earlier in the day (`convex/seed.ts` can recreate them) and were purged with
+`seed:clearFixtures` once the real instance came online.
 
-- **Real**: the platform, the Convex backend, the `/v1/*` ingest API (verified live — see the
-  smoke test), auth, the deploy on `miniva.co`, email routing, and every feature in the table
-  above.
-- **Seeded**: the demo server's seven runs (`convex/seed.ts`) are fixtures, not agent output.
-  They exist so the dashboard could be built and shown before the Hermes instance was
-  provisioned, and they carry the exact shape Hermes posts — so when the real instance
-  connects, nothing in the UI changes, the data just becomes real. **They are not presented as
-  agent work.** Real runs are the ones ingested through `/v1/*`.
+Two honest caveats: the Hermes session API does not expose token usage, so per-step cost
+shows $0 on bridged runs; and bridged sessions are single-agent, so their traces are
+shallower than the multi-specialist shape the UI is built for.
 
 ## Partner integrations
 

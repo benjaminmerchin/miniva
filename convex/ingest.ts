@@ -57,6 +57,9 @@ export const startRun = internalMutation({
     discordUserId: v.optional(v.string()),
     agentVersions: v.optional(v.array(v.object({ key: v.string(), version: v.number() }))),
     evalCaseId: v.optional(v.id("evalCases")),
+    // Optional so live runs default to now, while imports of past sessions
+    // keep their real wall-clock time.
+    startedAt: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const existing = await ctx.db
@@ -68,7 +71,7 @@ export const startRun = internalMutation({
     return await ctx.db.insert("runs", {
       ...args,
       status: "running",
-      startedAt: Date.now(),
+      startedAt: args.startedAt ?? Date.now(),
       totalCostUsd: 0,
       totalTokensIn: 0,
       totalTokensOut: 0,
@@ -141,6 +144,7 @@ export const completeRun = internalMutation({
     status: v.union(v.literal("succeeded"), v.literal("failed"), v.literal("escalated")),
     outcome: v.optional(v.string()),
     error: v.optional(v.string()),
+    endedAt: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const run = await ctx.db
@@ -149,7 +153,7 @@ export const completeRun = internalMutation({
       .unique();
     if (!run) throw new Error(`unknown run ${args.runId}`);
 
-    const endedAt = Date.now();
+    const endedAt = args.endedAt ?? Date.now();
     await ctx.db.patch(run._id, {
       status: args.status,
       outcome: args.outcome,

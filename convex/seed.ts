@@ -13,6 +13,32 @@ import type { Id } from "./_generated/dataModel";
 const MIN = 60_000;
 const HOUR = 60 * MIN;
 
+/**
+ * Remove every fixture — runs, steps, alerts, evals — but keep the server and
+ * the agents. Run this once the real Hermes instance is posting, so the
+ * dashboard only shows real data:  npx convex run seed:clearFixtures
+ */
+export const clearFixtures = mutation({
+  args: {},
+  handler: async (ctx) => {
+    let deleted = 0;
+    for (const table of [
+      "evalResults",
+      "evalRuns",
+      "evalCases",
+      "alerts",
+      "steps",
+      "runs",
+    ] as const) {
+      for (const row of await ctx.db.query(table).collect()) {
+        await ctx.db.delete(row._id);
+        deleted++;
+      }
+    }
+    return { deleted };
+  },
+});
+
 type StepSeed = {
   stepId: string;
   parentStepId?: string;
