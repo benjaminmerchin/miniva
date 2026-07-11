@@ -30,6 +30,8 @@ bridge uses the server ingest key already generated during Discord server setup.
 - An STT bridge, for example a Super Whisper wrapper exposing multipart
   `POST /transcribe`
 - Kyutai Pocket TTS, usually served locally with `pocket-tts serve`
+- A local reference voice such as `/Users/mac/Desktop/te2.mp3`, set through
+  `POCKET_TTS_VOICE`
 
 ## Hermes Contract
 
@@ -55,22 +57,68 @@ It accepts a reply from any of these fields:
 reply, response, content, text, message, answer
 ```
 
+For local Hermes connected to Codex/tooling, set:
+
+```bash
+HERMES_AGENT_URL=hermes-cli://local
+```
+
+The bridge then invokes:
+
+```bash
+hermes chat -q "<task>" --yolo -Q --max-turns 8 --source miniva-voice-bridge
+```
+
+Switching to a deployed Hermes server remains a one-line env change:
+
+```bash
+HERMES_AGENT_URL=https://your-hermes.example/api/agent
+```
+
+## DEBUG Agent
+
+Text command:
+
+```text
+DEBUG
+```
+
+The bridge posts a dedicated DEBUG payload to Hermes:
+
+```json
+{
+  "agent": "DEBUG",
+  "agentKey": "DEBUG",
+  "skip_gemma4_evaluation": true,
+  "debug": {
+    "connector_test": "shell_ping_google",
+    "command": "ping -c 3 google.com"
+  }
+}
+```
+
+The response is sent back into the Discord text channel. This gives a direct
+smoke test that Hermes can leverage its Codex/shell connector before we trust it
+inside the live voice loop.
+
 ## Pocket TTS Modes
 
-Default Kyutai server mode:
+Default Kyutai server mode, using the desktop voice file as the clone prompt:
 
 ```bash
 POCKET_TTS_MODE=pocket
 POCKET_TTS_URL=http://127.0.0.1:8000
+POCKET_TTS_VOICE=/Users/mac/Desktop/te2.mp3
 ```
 
 Request:
 
 ```text
 POST /tts
-Content-Type: application/x-www-form-urlencoded
+Content-Type: multipart/form-data
 
 text=...
+voice_wav=@/Users/mac/Desktop/te2.mp3
 ```
 
 OpenAI-compatible mode:

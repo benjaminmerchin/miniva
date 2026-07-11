@@ -152,6 +152,8 @@ The bridge authenticates to Miniva with `MINIVA_INGEST_KEY`, not a user session.
 User-facing auth remains Better Auth in Convex; server-to-server trace ingest
 uses the per-server bearer key.
 
+## DEBUG Agent
+
 When any Discord text message contains `DEBUG`, the bridge skips the normal
 voice/chat path and asks Hermes for a connector test:
 
@@ -165,7 +167,7 @@ The Hermes response is posted back into the same Discord text channel. If a
 voice transcript contains `DEBUG`, the same DEBUG agent path is used before
 Pocket TTS speaks the result.
 
-Checks:
+## Checks
 
 ```bash
 pnpm voice:check

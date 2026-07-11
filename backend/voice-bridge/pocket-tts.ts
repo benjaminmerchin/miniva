@@ -1,3 +1,5 @@
+import { existsSync, readFileSync } from "node:fs";
+import { basename, extname } from "node:path";
 import { endpoint, fetchBuffer } from "./http.js";
 import type { VoiceBridgeConfig } from "./config.js";
 
@@ -25,18 +27,49 @@ export async function synthesizeWithPocketTts(
   }
 
   const url = endpoint(config.pocketTtsUrl, "/tts");
-  const form = new URLSearchParams();
+  const form = new FormData();
   form.set("text", text);
-  if (config.pocketTtsVoice) form.set("voice", config.pocketTtsVoice);
+  appendPocketVoice(form, config.pocketTtsVoice);
 
   const { buffer } = await fetchBuffer(
     url,
     {
       method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: form,
     },
     config.hermesTimeoutMs,
   );
   return buffer;
+}
+
+function appendPocketVoice(form: FormData, voice?: string): void {
+  if (!voice) return;
+
+  if (existsSync(voice)) {
+    const bytes = readFileSync(voice);
+    form.set(
+      "voice_wav",
+      new Blob([new Uint8Array(bytes)], { type: contentTypeForVoice(voice) }),
+      basename(voice),
+    );
+    return;
+  }
+
+  form.set("voice_url", voice);
+}
+
+function contentTypeForVoice(path: string): string {
+  switch (extname(path).toLowerCase()) {
+    case ".mp3":
+      return "audio/mpeg";
+    case ".wav":
+      return "audio/wav";
+    case ".ogg":
+    case ".opus":
+      return "audio/ogg";
+    case ".m4a":
+      return "audio/mp4";
+    default:
+      return "application/octet-stream";
+  }
 }

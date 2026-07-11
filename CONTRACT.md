@@ -137,7 +137,9 @@ même ingest HTTP. Pour chaque prise de parole dans un channel vocal :
 L'URL Hermes reste une seule ligne d'env :
 
 ```bash
-HERMES_AGENT_URL=http://127.0.0.1:8787/api/agent
+HERMES_AGENT_URL=hermes-cli://local
+# or, once deployed:
+# HERMES_AGENT_URL=http://127.0.0.1:8787/api/agent
 ```
 
 ## 5. Provisioning fini

@@ -14,6 +14,7 @@ export type VoiceBridgeConfig = {
   pocketTtsMode: TtsMode;
   pocketTtsVoice?: string;
   pocketTtsModel: string;
+  debugAgentName: string;
   sttUrl?: string;
   sttTimeoutMs: number;
   silenceMs: number;
@@ -34,6 +35,7 @@ export function loadConfig(env = process.env): VoiceBridgeConfig {
     pocketTtsMode: ttsMode(env.POCKET_TTS_MODE),
     pocketTtsVoice: env.POCKET_TTS_VOICE,
     pocketTtsModel: env.POCKET_TTS_MODEL ?? "pocket-tts",
+    debugAgentName: env.DEBUG_AGENT_NAME ?? "DEBUG",
     sttUrl: env.STT_URL ?? env.SUPERWHISPER_URL,
     sttTimeoutMs: intEnv(env, "STT_TIMEOUT_MS", 60_000),
     silenceMs: intEnv(env, "VOICE_SILENCE_MS", 900),

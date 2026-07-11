@@ -1,5 +1,5 @@
 import prism from "prism-media";
-import { Client, GatewayIntentBits, ChannelType } from "discord.js";
+import { ChannelType, Client, GatewayIntentBits, type Message } from "discord.js";
 import {
   AudioPlayerStatus,
   EndBehaviorType,
@@ -12,13 +12,18 @@ import {
 import { loadConfig } from "./config.js";
 import { pcmToWav, playTtsBuffer } from "./audio.js";
 import { transcribeAudio } from "./transcription.js";
-import { sendToHermes } from "./hermes.js";
+import { sendDebugToHermes, sendToHermes } from "./hermes.js";
 import { synthesizeWithPocketTts } from "./pocket-tts.js";
 import { appendSteps, completeRun, readCrew, startRun } from "./miniva-ingest.js";
 
 const config = loadConfig();
 const client = new Client({
-  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates],
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildVoiceStates,
+    GatewayIntentBits.MessageContent,
+  ],
 });
 
 const activeSpeakers = new Set<string>();
@@ -58,6 +63,16 @@ client.once("ready", async () => {
 });
 
 client.login(config.discordBotToken);
+
+client.on("messageCreate", (message) => {
+  if (message.author.bot) return;
+  if (!isDebugInvocation(message.content)) return;
+
+  void processDebugMessage(message).catch(async (error) => {
+    const text = error instanceof Error ? error.message : String(error);
+    await sendLongMessage(message.channel, `DEBUG failed: ${text}`).catch(() => {});
+  });
+});
 
 async function captureUtterance(receiver: VoiceReceiver, userId: string) {
   if (activeSpeakers.has(userId)) return;
@@ -113,11 +128,17 @@ async function processTurn(input: {
       agentVersions,
     });
 
-    const hermes = await sendToHermes(config, {
-      transcript,
-      runId,
-      discordUserId: input.userId,
-    });
+    const hermes = isDebugInvocation(transcript)
+      ? await sendDebugToHermes(config, {
+          triggerText: transcript,
+          runId,
+          discordUserId: input.userId,
+        })
+      : await sendToHermes(config, {
+          transcript,
+          runId,
+          discordUserId: input.userId,
+        });
     const audio = await synthesizeWithPocketTts(config, hermes.reply);
 
     await appendSteps(config, {
@@ -142,5 +163,63 @@ async function processTurn(input: {
         error: message,
       }).catch((ingestError) => console.error("failed to report run failure", ingestError));
     }
+  }
+}
+
+async function processDebugMessage(message: Message) {
+  const runId = `debug_${Date.now()}_${message.author.id}`;
+  const startedAt = Date.now();
+
+  await sendLongMessage(
+    message.channel,
+    "DEBUG agent invoked. Asking Hermes to run `ping -c 3 google.com` through its connector/tooling...",
+  );
+
+  await startRun(config, {
+    runId,
+    transcript: message.content,
+    discordUserId: message.author.id,
+    agentVersions,
+  });
+
+  try {
+    const hermes = await sendDebugToHermes(config, {
+      triggerText: message.content,
+      runId,
+      discordUserId: message.author.id,
+    });
+    await appendSteps(config, {
+      runId,
+      transcript: message.content,
+      hermesReply: hermes.reply,
+      startedAt,
+    });
+    await completeRun(config, {
+      runId,
+      outcome: `DEBUG connector test returned: ${hermes.reply.slice(0, 180)}`,
+    });
+    await sendLongMessage(message.channel, `DEBUG result:\n${hermes.reply}`);
+  } catch (error) {
+    const text = error instanceof Error ? error.message : String(error);
+    await completeRun(config, {
+      runId,
+      outcome: "DEBUG connector test failed.",
+      error: text,
+    }).catch((ingestError) => console.error("failed to report debug failure", ingestError));
+    throw error;
+  }
+}
+
+function isDebugInvocation(text: string): boolean {
+  return /\bDEBUG\b/i.test(text);
+}
+
+async function sendLongMessage(channel: Message["channel"], text: string) {
+  if (!("send" in channel)) {
+    throw new Error("DEBUG response channel cannot send messages");
+  }
+  const maxLength = 1900;
+  for (let i = 0; i < text.length; i += maxLength) {
+    await channel.send(text.slice(i, i + maxLength));
   }
 }
