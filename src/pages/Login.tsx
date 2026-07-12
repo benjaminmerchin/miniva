@@ -97,7 +97,7 @@ export default function Login() {
               <h1 className="text-[24px] font-semibold tracking-tight">Check your inbox</h1>
               <p className="mt-1.5 text-[13px] leading-relaxed text-muted">
                 We sent a sign-in link to <span className="text-fg">{email}</span>. It
-                works once and expires in 5 minutes.
+                works once and expires in 15 minutes.
               </p>
               <button
                 onClick={() => {

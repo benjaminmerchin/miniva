@@ -20,7 +20,7 @@ export async function sendMagicLink(to: string, url: string) {
       subject: "Your Miniva sign-in link",
       // Plain text alongside HTML: some clients strip the markup, and a link
       // that only exists in HTML is a link some people cannot click.
-      text: `Sign in to Miniva:\n\n${url}\n\nThis link expires in 5 minutes. If you didn't ask for it, ignore this email.`,
+      text: `Sign in to Miniva:\n\n${url}\n\nThis link expires in 15 minutes. If you didn't ask for it, ignore this email.`,
       html: `
 <div style="font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;max-width:440px;margin:0 auto;padding:32px 24px;color:#18181b">
   <div style="display:flex;align-items:center;gap:8px;margin-bottom:28px">
@@ -39,7 +39,7 @@ export async function sendMagicLink(to: string, url: string) {
   </a>
 
   <p style="font-size:12px;line-height:1.6;color:#a1a1aa;margin:24px 0 0">
-    This link expires in 5 minutes and can only be used once.
+    This link expires in 15 minutes and can only be used once.
     If you didn't request it, you can safely ignore this email.
   </p>
 

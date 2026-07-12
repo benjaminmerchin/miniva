@@ -26,7 +26,9 @@ export const createAuth = (ctx: GenericCtx<DataModel>) =>
       // Signing in and signing up are the same act: an unknown address gets an
       // account on first click, so there is no "wrong door" to pick.
       magicLink({
-        expiresIn: 60 * 5,
+        // 15 minutes: long enough to survive a slow inbox or a hop to the
+        // phone, short enough that a leaked link is stale by the time it hurts.
+        expiresIn: 60 * 15,
         disableSignUp: false,
         sendMagicLink: async ({ email, url }) => {
           await sendMagicLink(email, url);
