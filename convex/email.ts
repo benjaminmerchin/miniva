@@ -23,9 +23,11 @@ export async function sendMagicLink(to: string, url: string) {
       text: `Sign in to Miniva:\n\n${url}\n\nThis link expires in 15 minutes. If you didn't ask for it, ignore this email.`,
       html: `
 <div style="font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;max-width:440px;margin:0 auto;padding:32px 24px;color:#18181b">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:28px">
-    <span style="display:inline-block;width:20px;height:20px;border-radius:5px;background:#5865F2"></span>
-    <span style="font-size:15px;font-weight:600;letter-spacing:-0.01em">Miniva</span>
+  <!-- Table + text "M": Gmail strips inline SVG, so the mark is a letterform,
+       and vertical centering uses line-height (flexbox is unreliable in mail). -->
+  <div style="margin-bottom:28px">
+    <span style="display:inline-block;width:22px;height:22px;border-radius:5px;background:#5865F2;color:#fff;font-size:15px;font-weight:700;text-align:center;line-height:22px;vertical-align:middle">M</span>
+    <span style="font-size:15px;font-weight:600;letter-spacing:-0.01em;vertical-align:middle;margin-left:8px">Miniva</span>
   </div>
 
   <h1 style="font-size:20px;font-weight:600;letter-spacing:-0.02em;margin:0 0 8px">Sign in to Miniva</h1>
